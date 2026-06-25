@@ -75,5 +75,5 @@ Rather than editing the config manually, stand in front of a lit hub portal and 
 Dimensions will append the portal's coordinates to the `Portals.List` automatically.
 
 <Note>
-  The `World` field and the `Portals.List` serve different purposes. Setting `World` to a world name redirects **all** portal traffic through the hub world. If you set `World` to `'false'`, the `Portals.List` becomes active — players are teleported directly to a location from the list rather than to a hub world. Choose the approach that fits your server's design.
+  The `Portals.List` only works when `World` is set to a valid world name. If `World` is set to `'false'` (or removed), the hub system is disabled entirely for that portal and the list is ignored.
 </Note>

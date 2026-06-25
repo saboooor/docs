@@ -11,13 +11,11 @@ The main configuration file for Dimensions lives at `./plugins/Dimensions/config
 <CodeGroup>
 
 ```yaml config.yml
-checkForUpdatesOnStartup: false
 searchRadius: 128
 safeSpotSearchRadius: 16
 debugLevel: 2
 enableNetherPortalEffect: true
 fallbackWorld: world
-configVersion: 1
 consumeItems: true
 searchSameAxis: false
 searchSameSize: false
@@ -29,10 +27,6 @@ updateEveryTick: 7
 </CodeGroup>
 
 ## Option Reference
-
-<ParamField path="checkForUpdatesOnStartup" type="boolean" default="false">
-  When set to `true`, Dimensions checks for available addon updates every time the server starts and installs any new versions it finds automatically.
-</ParamField>
 
 <ParamField path="searchRadius" type="integer" default="128">
   The block radius Dimensions searches when looking for an already-built, active portal at the destination. Increase this value if players frequently land inside walls; decrease it on servers with many closely spaced portals to reduce false matches.

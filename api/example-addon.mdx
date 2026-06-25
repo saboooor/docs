@@ -4,7 +4,7 @@ sidebarTitle: "Example Addon"
 description: "A complete walkthrough of a working Dimensions addon that spawns explosion particles when a permissioned player ignites a custom portal."
 ---
 
-The best way to understand the Dimensions addon API is to read a working example from end to end. This page walks through a complete addon that listens for the `CustomPortalIgniteEvent` and spawns `EXPLOSION_NORMAL` particles at the center of any portal ignited by a player who holds the `dimensions.exampleaddon.explosion` permission. The full source is available on [GitHub](https://github.com/xXastaspastaXx/Dimensions3).
+The best way to understand the Dimensions addon API is to read a working example from end to end. This page walks through a complete addon that listens for the `CustomPortalIgniteEvent` and spawns explosion particles at the center of any portal ignited by a player who holds the `dimensions.exampleaddon.explosion` permission. The full source is available on [GitHub](https://github.com/xXastaspastaXx/Dimensions3).
 
 ## The Complete Main Class
 
@@ -13,24 +13,23 @@ Below is the full implementation. Each section is explained after the code block
 ```java
 package me.xxastaspastaxx.dimensions.addons.exampleaddon;
 
+import me.xxastaspastaxx.dimensions.Dimensions;
+import me.xxastaspastaxx.dimensions.DimensionsUtils;
+import me.xxastaspastaxx.dimensions.addons.DimensionsAddon;
+import me.xxastaspastaxx.dimensions.addons.DimensionsAddonPriority;
+import me.xxastaspastaxx.dimensions.completePortal.CompletePortal;
+import me.xxastaspastaxx.dimensions.events.CustomPortalIgniteEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import me.xxastaspastaxx.dimensions.Dimensions;
-import me.xxastaspastaxx.dimensions.addons.DimensionsAddon;
-import me.xxastaspastaxx.dimensions.addons.DimensionsAddonPriority;
-import me.xxastaspastaxx.dimensions.completePortal.CompletePortal;
-import me.xxastaspastaxx.dimensions.events.CustomPortalIgniteEvent;
-
 public class DimensionsExampleAddonMain extends DimensionsAddon implements Listener {
 
     public DimensionsExampleAddonMain() {
-        super("ExampleAddon", "1.0.0", "Example addon", DimensionsAddonPriority.NORMAL);
+        super("ExampleAddon", "4.0.0", "An example addon", DimensionsAddonPriority.NORMAL);
     }
 
     @Override
@@ -45,7 +44,8 @@ public class DimensionsExampleAddonMain extends DimensionsAddon implements Liste
 
         CompletePortal complete = e.getCompletePortal();
         Location location = complete.getCenter();
-        location.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, location, 5);
+        location.getWorld().spawnParticle(
+            DimensionsUtils.getParticle("EXPLOSION", "EXPLOSION_NORMAL"), location, 5);
     }
 }
 ```
@@ -66,7 +66,7 @@ Dimensions calls this method when it activates your addon. Registering `this` as
 
 **`@EventHandler` — `postPortalIgnite`**
 
-Setting `ignoreCancelled = true` means your handler is skipped if another addon or listener already cancelled the event — a good default that prevents double-triggering side effects. The guard at the top of the method exits early if the igniting entity is not a `Player` or if the player lacks the required permission, keeping the logic clean and safe. `e.getCompletePortal()` returns the physical portal in the world, and `getCenter()` gives you a `Location` to anchor the particle effect.
+Setting `ignoreCancelled = true` means your handler is skipped if another addon or listener already cancelled the event — a good default that prevents double-triggering side effects. The guard at the top of the method exits early if the igniting entity is not a `Player` or if the player lacks the required permission, keeping the logic clean and safe. `e.getCompletePortal()` returns the physical portal in the world, and `getCenter()` gives you a `Location` to anchor the particle effect. `DimensionsUtils.getParticle(...)` is a Dimensions helper that resolves the correct particle name across different server versions.
 
 ## ServiceLoader Registration File
 

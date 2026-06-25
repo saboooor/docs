@@ -27,7 +27,8 @@ Options:
   AllowedWorlds:
     - 'all'
     - '!world_the_end'
-  BuildExitPortal: true
+  ExitPortal:
+    Enable: true
   TeleportDelay: 4
   EnableParticles: true
 ```
@@ -106,7 +107,7 @@ Options:
   </CodeGroup>
 </ParamField>
 
-<ParamField path="Options.BuildExitPortal" type="boolean" default="true">
+<ParamField path="Options.ExitPortal.Enable" type="boolean" default="true">
   When `true`, Dimensions automatically constructs a matching exit portal at the destination if one does not already exist within `searchRadius` blocks. Set to `false` if you want to place exit portals manually or if the destination world is read-only.
 </ParamField>
 

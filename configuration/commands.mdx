@@ -12,11 +12,11 @@ All Dimensions commands are grouped under the `/dim` root command. You can run `
 |---|---|
 | `/dim help` | Displays all available Dimensions commands in-game. |
 | `/dim perms` | Lists the permission node associated with every command. |
-| `/dim portal` | Opens the portal management interface for creating or editing a portal. |
+| `/dim portal [name]` | Shows information about a portal. Provide a portal name to look it up by ID, or omit the argument to inspect the portal you are looking at in-game. |
 | `/dim portals` | Lists all currently configured portals on the server. |
 | `/dim worlds` | Displays all worlds that Dimensions is aware of, along with their configured settings. |
 | `/dim reload` | Reloads `config.yml` and all portal `.yml` files without restarting the server. Use this after any configuration change. |
-| `/dim clear` | Clears cached portal data. Useful if portal detection appears out of sync with the world. |
+| `/dim clear <all/world/portal>` | Removes saved portal data. Pass `all` to clear everything, a world name to clear portals in that world, or a portal ID to clear a specific portal type. |
 | `/dim info` | Displays version information, loaded portal count, and other diagnostic details about the running Dimensions instance. |
 | `/dim forceLink select` | Selects a portal to act as the source for a forced link. Requires the **ForceLink** addon. |
 | `/dim forceLink set` | Sets the previously selected portal's forced destination. Requires the **ForceLink** addon. |

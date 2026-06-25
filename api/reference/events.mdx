@@ -73,11 +73,12 @@ Dimensions fires `CustomPortalIgniteEvent` when a portal frame is being lit. Can
 ```java
 @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
 public void onPortalIgnite(CustomPortalIgniteEvent event) {
-    if (!(event.getEntity() instanceof Player player)) return;
+    if (!(event.getEntity() instanceof Player)) return;
 
     CompletePortal portal = event.getCompletePortal();
     Location center = portal.getCenter();
-    center.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, center, 5);
+    center.getWorld().spawnParticle(
+        DimensionsUtils.getParticle("EXPLOSION", "EXPLOSION_NORMAL"), center, 5);
 }
 ```
 

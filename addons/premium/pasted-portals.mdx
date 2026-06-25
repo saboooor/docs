@@ -41,14 +41,8 @@ Every portal structure that you want to auto-ignite **must** contain a sign plac
 ## Setup
 
 <Steps>
-  <Step title="Enable the addon">
-    Add the addon to your portal's `.yml` config:
-
-    ```yaml
-    Addon:
-      PastedPortals:
-        Enable: true
-    ```
+  <Step title="Enable the addon for your portal">
+    Open your portal's `.yml` config file. The Pasted Portals addon activates for any portal that has it listed under `Addon:` — no extra sub-keys are required.
   </Step>
   <Step title="Place the identification sign inside the portal structure">
     In your schematic or island template, place a sign **inside** the portal frame (where the portal blocks appear). Write `[DIMENSIONS]` on line 1 and the portal name on line 2.
