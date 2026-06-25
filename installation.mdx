@@ -1,0 +1,79 @@
+---
+title: "Install Dimensions on Your Minecraft Server"
+sidebarTitle: "Installation"
+description: "Download the Dimensions jar, drop it into your server's plugins folder, and restart to have custom portals up and running in minutes."
+---
+
+Installing Dimensions takes only a couple of minutes. The plugin is a standard Spigot/Paper jar — there is no installer, no database setup, and no extra dependencies. Once the jar is in place and your server restarts, Dimensions generates all of its configuration files automatically and is ready for you to start creating portals.
+
+## Requirements
+
+- A **Spigot** or **Paper** Minecraft server (Dimensions is not supported on vanilla or Forge/Fabric servers)
+- Server operator or file-system access to your server's `plugins/` directory
+
+## Installation Steps
+
+<Steps>
+  <Step title="Download the Dimensions jar">
+    Head to the Dimensions resource page on SpigotMC:
+
+    [https://www.spigotmc.org/resources/dimensions-custom-portals.57542/](https://www.spigotmc.org/resources/dimensions-custom-portals.57542/)
+
+    Click **Download Now** to save `Dimensions.jar` to your computer.
+  </Step>
+  <Step title="Drop the jar into your plugins folder">
+    Copy or upload `Dimensions.jar` into the `plugins/` directory at the root of your Minecraft server files.
+
+    ```
+    your-server/
+    ├── plugins/
+    │   └── Dimensions.jar   ← place it here
+    ├── server.jar
+    └── server.properties
+    ```
+  </Step>
+  <Step title="Restart your server">
+    Do a full server restart to load the plugin.
+
+    <Note>
+      Always **restart** your server rather than using `/reload` or a reload plugin. Reloading can cause Dimensions to initialize incorrectly and may lead to unexpected behavior.
+    </Note>
+  </Step>
+  <Step title="Verify the plugin loaded and review generated files">
+    After the restart, Dimensions automatically creates its configuration folder and default files:
+
+    ```
+    plugins/
+    └── Dimensions/
+        ├── config.yml        ← main plugin settings
+        ├── Portals/          ← place your portal .yml files here
+        └── Addons/           ← place addon jars here
+    ```
+
+    You should see a confirmation message in your server console similar to:
+
+    ```
+    [Dimensions] Plugin enabled successfully.
+    ```
+  </Step>
+</Steps>
+
+## Installing Addons
+
+To add extra functionality through official addons, drop the addon `.jar` file into the `./plugins/Dimensions/Addons/` folder and restart your server.
+
+```
+plugins/
+└── Dimensions/
+    └── Addons/
+        └── MyAddon.jar   ← place addon jars here
+```
+
+<Info>
+  The `Addons/` folder is only created after Dimensions has been loaded at least once. If you don't see it, make sure the plugin loaded successfully on first start, then add your addon jars and restart again.
+</Info>
+
+You can find addons on SpigotMC:
+
+- **Free addons:** [https://www.spigotmc.org/resources/dimensionsfreeaddons.97040/](https://www.spigotmc.org/resources/dimensionsfreeaddons.97040/)
+- **Paid addons (full pack):** [https://www.spigotmc.org/resources/dimensions-custom-portals-full.83982/](https://www.spigotmc.org/resources/dimensions-custom-portals-full.83982/)

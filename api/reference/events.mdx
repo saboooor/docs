@@ -1,0 +1,111 @@
+---
+title: "Dimensions Events API Reference for Addon Developers"
+sidebarTitle: "Events"
+description: "Reference for the three cancellable Dimensions events: CustomPortalUseEvent, CustomPortalIgniteEvent, and CustomPortalBreakEvent."
+---
+
+Dimensions fires three cancellable events that let your addon react to — or prevent — core portal actions. All three implement Bukkit's `Cancellable` interface, so you can call `setCancelled(true)` to stop the action entirely. To receive any of these events, your main class must implement `Listener` and be registered via `Bukkit.getPluginManager().registerEvents(this, pl)` inside `onEnable`.
+
+## Standard Event Handler Pattern
+
+Use a standard `@EventHandler` annotation for all three events. Set `ignoreCancelled = true` unless your addon specifically needs to handle already-cancelled events.
+
+```java
+@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+public void onPortalUse(CustomPortalUseEvent event) {
+    // event.getEntity()           — the entity using the portal
+    // event.getCompletePortal()   — the portal being used
+    // event.getDestinationPortal()— the destination portal (can be overridden)
+    // event.setCancelled(true)    — prevent teleportation
+}
+```
+
+---
+
+## CustomPortalUseEvent
+
+[Javadocs →](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/events/CustomPortalUseEvent.html)
+
+Dimensions fires `CustomPortalUseEvent` when an entity is standing inside a portal and is ready to be teleported. Cancelling this event prevents teleportation — the entity stays in place.
+
+| Method | Returns | Description |
+|---|---|---|
+| `getEntity()` | `Entity` | The entity attempting to use the portal. |
+| `getCompletePortal()` | `CompletePortal` | The portal the entity is stepping into. |
+| `getDestinationPortal()` | `CompletePortal` | The portal the entity would be sent to. |
+| `setDestinationPortal(CompletePortal)` | `void` | Override the destination portal before teleportation occurs. |
+| `setCancelled(boolean)` | `void` | Pass `true` to prevent teleportation. |
+
+```java
+@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+public void onPortalUse(CustomPortalUseEvent event) {
+    Entity entity = event.getEntity();
+    CompletePortal portal = event.getCompletePortal();
+
+    // Example: block use of portals that have a specific tag set
+    if (portal.getTag("locked") != null) {
+        event.setCancelled(true);
+    }
+}
+```
+
+---
+
+## CustomPortalIgniteEvent
+
+[Javadocs →](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/events/CustomPortalIgniteEvent.html)
+
+Dimensions fires `CustomPortalIgniteEvent` when a portal frame is being lit. Cancelling this event prevents the portal from igniting — the inside blocks will not be placed and the portal will not become active.
+
+| Method | Returns | Description |
+|---|---|---|
+| `getEntity()` | `Entity` | The entity igniting the portal. May be `null` if no entity is involved. |
+| `getCompletePortal()` | `CompletePortal` | The portal being ignited. |
+| `getCause()` | `CustomPortalIgniteCause` | The reason the portal is being ignited (e.g. player, exit portal creation, server load). |
+| `getLighter()` | `ItemStack` | The item used to ignite the portal. May be `null`. |
+| `replaceCompletePortal(CompletePortal)` | `void` | Swap in a different portal instance before ignition completes. |
+| `setCancelled(boolean)` | `void` | Pass `true` to prevent ignition. Note: cancelling has no effect when the cause is `EXIT_PORTAL`. |
+
+<Note>
+  `setCancelled(true)` is ignored when `getCause()` returns `CustomPortalIgniteCause.EXIT_PORTAL`. Dimensions will always complete exit-portal creation to avoid stranding players between worlds.
+</Note>
+
+```java
+@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+public void onPortalIgnite(CustomPortalIgniteEvent event) {
+    if (!(event.getEntity() instanceof Player player)) return;
+
+    CompletePortal portal = event.getCompletePortal();
+    Location center = portal.getCenter();
+    center.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, center, 5);
+}
+```
+
+---
+
+## CustomPortalBreakEvent
+
+[Javadocs →](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/events/CustomPortalBreakEvent.html)
+
+Dimensions fires `CustomPortalBreakEvent` when a portal is being destroyed — either by a player breaking frame blocks, by an explosion, or by another plugin. Cancelling this event prevents the portal from being removed.
+
+| Method | Returns | Description |
+|---|---|---|
+| `getCompletePortal()` | `CompletePortal` | The portal being broken. |
+| `getCause()` | `CustomPortalDestroyCause` | The reason the portal is being destroyed. |
+| `getDestroyer()` | `Entity` | The entity responsible for breaking the portal. May be `null`. |
+| `setCancelled(boolean)` | `void` | Pass `true` to prevent the portal from breaking. |
+
+```java
+@EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+public void onPortalBreak(CustomPortalBreakEvent event) {
+    CompletePortal portal = event.getCompletePortal();
+
+    // Clean up any addon-specific data attached to this portal
+    portal.setTag("myAddonData", null);
+}
+```
+
+<Warning>
+  If you call `Dimensions.getCompletePortalManager().removePortal()` directly instead of going through the event, the portal's entry in the manager is removed but the portal blocks in the world remain as-is. This can leave a lit portal with no frame that Dimensions no longer tracks. If your addon uses `removePortal()` directly, revert the relevant block states manually to keep the world in a consistent state.
+</Warning>

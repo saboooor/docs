@@ -1,0 +1,90 @@
+---
+title: "Create Your First Custom Portal in Dimensions"
+sidebarTitle: "First Portal"
+description: "Use the Portal Creator web tool to configure your portal, download the config file, place it on your server, and build your first portal in-game."
+---
+
+Creating a portal with Dimensions follows a straightforward flow: you design the portal in the **Portal Creator** web tool, download a `.yml` config file, place it in your server's `Portals/` folder, restart the server, and then build the physical portal frame in-game and light it. The whole process takes only a few minutes, and you don't need to write any YAML by hand.
+
+## Overview
+
+1. Configure your portal in the Portal Creator web tool
+2. Download the `.yml` portal file
+3. Place the file in `./plugins/Dimensions/Portals/`
+4. Restart the server to register the portal
+5. Build the frame in-game and ignite it
+
+## Step-by-Step Guide
+
+<Steps>
+  <Step title="Open the Portal Creator web tool">
+    Navigate to the Portal Creator in your browser:
+
+    [https://astaspasta.alwaysdata.net/](https://astaspasta.alwaysdata.net/)
+
+    Click **Portal Creator** to open the portal configuration interface.
+  </Step>
+  <Step title="Configure your portal">
+    Use the Portal Creator to define how your portal looks and behaves. The three core settings to configure are:
+
+    - **Frame block** — the block material players will use to build the portal frame (e.g. gold blocks, stone bricks, or any other block)
+    - **Lighter item** — the item players right-click to ignite the frame (e.g. flint and steel, a stick, or a custom item)
+    - **Inside block** — the block that fills the portal frame once it's lit, giving it its visual appearance
+
+    You can also set the destination world or server at this stage.
+
+    <Tip>
+      Before finalizing your portal config, make sure you have enough of the frame block available in-game. For a standard 4×5 nether-portal-shaped frame you'll need at least 14 blocks. Gather your materials before you restart the server so you can build right away.
+    </Tip>
+  </Step>
+  <Step title="Download the portal config file">
+    Once you're happy with your settings, click the **Config** tab in the Portal Creator, then click **Download portal file**. This saves a `.yml` file to your computer — for example, `my_portal.yml`.
+  </Step>
+  <Step title="Place the file in the Portals folder">
+    Copy or upload the downloaded `.yml` file into your server's `Portals/` directory:
+
+    ```
+    plugins/
+    └── Dimensions/
+        └── Portals/
+            └── my_portal.yml   ← place your portal file here
+    ```
+
+    You can have multiple portal files in this folder — each `.yml` defines a distinct portal type.
+  </Step>
+  <Step title="Restart the server">
+    Restart your server to load the new portal configuration.
+
+    <Warning>
+      Use a full server restart, not `/reload`. Reloading may cause Dimensions to miss newly added portal files or initialize them incorrectly.
+    </Warning>
+
+    After the restart, Dimensions reads every `.yml` file in the `Portals/` folder and registers each portal type automatically.
+  </Step>
+  <Step title="Build and light the portal in-game">
+    Join your server and follow these steps to bring your portal to life:
+
+    1. **Build the frame** — place your configured frame block in the same shape as a nether portal (a rectangular frame, minimum 4 blocks wide × 5 blocks tall). The interior of the frame should be left empty.
+
+       ```
+       X X X X
+       X . . X
+       X . . X
+       X . . X
+       X X X X
+       ```
+       *(X = frame block, . = empty space)*
+
+    2. **Ignite the portal** — stand in front of the frame and **right-click** on it with your configured lighter item. The inside blocks will fill the frame, and the portal is now active.
+
+    <Info>
+      Once a portal is lit, players need to **stand inside it** for the configured teleport delay to count down before they are sent to the destination. Stepping out of the portal cancels the teleport.
+    </Info>
+  </Step>
+</Steps>
+
+## Next Steps
+
+For a deeper look at all the options the Portal Creator offers — including destination servers, teleport delays, permission nodes, and more — see the full reference guide:
+
+- [Portal Creator Overview](/portal-creator/overview)

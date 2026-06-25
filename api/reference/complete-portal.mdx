@@ -1,0 +1,56 @@
+---
+title: "CompletePortal API Reference for Dimensions Addons"
+sidebarTitle: "CompletePortal"
+description: "Reference for CompletePortal — the class representing a physical portal built in the world, with methods for creation, tags, and active state."
+---
+
+`CompletePortal` represents a portal that physically exists in a Minecraft world — a frame a player has built and lit. Each instance references its parent `CustomPortal` type, stores its location and geometry, and can hold arbitrary key-value data through the portal tag system. This is the class you will interact with most often in event handlers and scheduled tasks.
+
+## Creating a Portal Programmatically
+
+When you need to create a portal through code rather than having a player light one, use:
+
+```java
+Dimensions.getCompletePortalManager().createNew();
+```
+
+Only call `createNew()` when the portal is fully ready for use. If you register an incomplete portal, Dimensions will start teleporting players through it immediately. The one exception is creating a **temporary placeholder portal** for a forced teleport — in that case, an incomplete instance is acceptable since players will never naturally trigger it.
+
+<Warning>
+  Do not call `createNew()` unless the portal blocks are already placed in the world and the portal is in a valid state. Dimensions has no concept of a "pending" portal — registration is final.
+</Warning>
+
+## Portal Tags
+
+Portal tags let you attach arbitrary data to a specific `CompletePortal` instance. Tags are the correct way to store per-portal addon state; they persist in memory for the lifetime of the portal object.
+
+| Method | Description |
+|---|---|
+| `CompletePortal#setTag(String key, Object value)` | Store any object under the given key. Pass `null` to remove the tag. |
+| `CompletePortal#getTag(String key)` | Retrieve the value stored under the key, or `null` if it does not exist. |
+
+```java
+// Storing data
+portal.setTag("hubReturnLocation", player.getLocation());
+
+// Retrieving data
+Location returnLoc = (Location) portal.getTag("hubReturnLocation");
+```
+
+<Tip>
+  The HubWorld addon uses portal tags to store the location each player came from, so it can send them back to the right spot when they leave the hub world. Use the same pattern for any data that belongs to one specific portal instance.
+</Tip>
+
+## Checking Whether a Portal Is Active
+
+A `CompletePortal` exists in memory even when its chunk is unloaded. Before running any task that interacts with the portal's world blocks — particle effects, block updates, entity scanning — check whether the portal is active first:
+
+```java
+if (!portal.isActive()) return;
+```
+
+`CompletePortal#isActive()` returns `false` when the portal's chunk is not currently loaded, preventing unnecessary work and potential errors from accessing unloaded world data.
+
+## Javadocs
+
+The full method listing for `CompletePortal` is available in the [Javadocs](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/completePortal/CompletePortal.html).

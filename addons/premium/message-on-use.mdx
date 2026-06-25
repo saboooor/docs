@@ -1,0 +1,53 @@
+---
+title: "Message on Use Addon: Notify Players at Portals"
+sidebarTitle: "Message on Use"
+description: "Send a fully customizable chat message to any player the moment they step through a Dimensions portal, with support for color codes."
+---
+
+The Message on Use addon sends a chat message directly to a player when they use a portal. Use it to provide flavor text, warn players about where they're going, display lore, or simply confirm that the teleport worked. The message is per-portal, so each portal can carry its own unique notification.
+
+## Configuration
+
+Add the `MessageOnUse` key under the `Addon:` section in your portal's `.yml` file.
+
+```yaml
+Addon:
+  MessageOnUse: '<message>'
+```
+
+Replace `<message>` with the text you want to send. The message is sent to the player at the moment they use the portal.
+
+### Example: Flavor Text Portal
+
+```yaml
+Addon:
+  MessageOnUse: '&6You feel a strange pull as reality warps around you...'
+```
+
+### Example: Destination Confirmation
+
+```yaml
+Addon:
+  MessageOnUse: '&aTeleporting to the Nether Hub. Watch your step!'
+```
+
+### Example: Warning Message
+
+```yaml
+Addon:
+  MessageOnUse: '&cWarning: this portal leads to a PvP zone. You have been marked for combat!'
+```
+
+## Formatting Tips
+
+- Use standard Minecraft color codes prefixed with `&` to style your message (e.g. `&a` for green, `&c` for red, `&e` for yellow, `&l` for bold).
+- Wrap the entire message value in single quotes so special characters are handled correctly by the YAML parser.
+- Keep messages concise — players see them in chat at the same time as the teleport fires, so shorter messages are read more reliably.
+
+<Tip>
+  Stack Message on Use with the [Permissions addon](/addons/premium/permissions) to give denied players a helpful hint. Set the Permission `DenyMessage` to explain why access is blocked, and set `MessageOnUse` to welcome players who do get through with context about where they've arrived.
+</Tip>
+
+<Note>
+  The message is sent only to the player who uses the portal. It is not broadcast to the entire server. If you need a server-wide announcement, use the [Commands on Use addon](/addons/premium/commands-on-use) with a `console;true;broadcast <message>` entry instead.
+</Note>

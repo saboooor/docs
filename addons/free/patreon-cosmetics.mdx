@@ -1,0 +1,56 @@
+---
+title: "Patreon Cosmetics Addon for Dimensions Portals"
+sidebarTitle: "Patreon Cosmetics"
+description: "Reward Patreon supporters with particle effects on portal interactions. Plug and play for players; configurable for server owners."
+---
+
+The Patreon Cosmetics addon lets players who have supported Dimensions on Patreon enjoy exclusive visual effects whenever they ignite, destroy, or step through a portal. Once a player links their Minecraft account to their Patreon account through the Dimensions website, their effects activate automatically on any server running this addon — no per-server configuration required for players.
+
+## How It Works for Players
+
+Players link their Minecraft and Patreon accounts on the Dimensions website. After the link is confirmed, the addon detects their UUID at runtime and applies their chosen cosmetic effects. There is nothing else a player needs to do.
+
+## Configuration for Server Owners
+
+As a server owner, you are not required to configure anything for the addon to work for your players. However, as a thank-you for supporting the plugin, you can apply cosmetic effects to your own account by adding the following block to your `config.yml`:
+
+```yaml
+CosmeticsAddon:
+    PlayerUUID: <your uuid>
+    IgnitePortal: <cosmetic>
+    DestroyPortal: <cosmetic>
+    UsePortal: <cosmetic>
+```
+
+Replace `<your uuid>` with your Minecraft player UUID and each `<cosmetic>` with one of the effect names listed below.
+
+## Available Cosmetic Effects
+
+The table below lists every available effect and the portal events it supports. Use these names as the values in `config.yml`.
+
+| Effect | Supported Events |
+|---|---|
+| `NOTHING` | Disables effects entirely |
+| `FINAL_SPARK` | use, destroy, ignite |
+| `FILLING_THE_VOID` | tick, use, destroy, ignite |
+| `HEART_SEEKER` | tick, use, destroy, ignite |
+| `HUNGRY_HOUNDS` | tick, use, destroy, ignite |
+| `GLOWING_AURA` | tick |
+| `ANGRY_LLAMA` | tick |
+| `EXPLOSIONS` | destroy, use |
+| `LIL_RING` | tick |
+
+### Event Descriptions
+
+The event keywords in the table above correspond directly to the config keys:
+
+- **use** — triggers when a player teleports through the portal; set via `UsePortal`
+- **ignite** — triggers when a player lights the portal; set via `IgnitePortal`
+- **destroy** — triggers when a portal frame is broken; set via `DestroyPortal`
+- **tick** — triggers continuously while the portal is active; set via `PortalTick`
+
+<Note>
+  Only assign an effect to a config key if that effect lists the matching event
+  in the table above. For example, `GLOWING_AURA` only supports `tick`, so
+  placing it under `IgnitePortal` has no effect.
+</Note>

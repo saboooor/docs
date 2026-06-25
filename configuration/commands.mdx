@@ -1,0 +1,38 @@
+---
+title: "Dimensions Plugin Commands and Permissions"
+sidebarTitle: "Commands"
+description: "A complete reference for every /dim command, what each one does, and how to view the permission node required to run it on your server."
+---
+
+All Dimensions commands are grouped under the `/dim` root command. You can run `/dim help` at any time in-game to see the full list of available commands, and `/dim perms` to display the permission node required for each one. The table below describes each command so you can set up your permission manager without having to look them up one by one.
+
+## Command Reference
+
+| Command | Description |
+|---|---|
+| `/dim help` | Displays all available Dimensions commands in-game. |
+| `/dim perms` | Lists the permission node associated with every command. |
+| `/dim portal` | Opens the portal management interface for creating or editing a portal. |
+| `/dim portals` | Lists all currently configured portals on the server. |
+| `/dim worlds` | Displays all worlds that Dimensions is aware of, along with their configured settings. |
+| `/dim reload` | Reloads `config.yml` and all portal `.yml` files without restarting the server. Use this after any configuration change. |
+| `/dim clear` | Clears cached portal data. Useful if portal detection appears out of sync with the world. |
+| `/dim info` | Displays version information, loaded portal count, and other diagnostic details about the running Dimensions instance. |
+| `/dim forceLink select` | Selects a portal to act as the source for a forced link. Requires the **ForceLink** addon. |
+| `/dim forceLink set` | Sets the previously selected portal's forced destination. Requires the **ForceLink** addon. |
+
+<Note>
+  Run `/dim help` in-game to see any additional commands introduced by addons you have installed. The table above covers the commands bundled with the base plugin.
+</Note>
+
+<Warning>
+  The `forceLink` commands are only available when the **ForceLink** addon is installed alongside Dimensions. Attempting to run them without the addon will result in an unknown command error.
+</Warning>
+
+## Viewing Permissions
+
+Run `/dim perms` in-game (or from the console) to get a live list of every permission node mapped to each command. Copy these nodes directly into your permission manager (e.g. LuckPerms, PermissionsEx) to control which players or groups can access each feature.
+
+<Tip>
+  Grant `dimensions.*` to administrators to give them access to all Dimensions commands at once, or assign individual permission nodes for finer-grained control.
+</Tip>

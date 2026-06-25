@@ -1,0 +1,106 @@
+---
+title: "Dimensions Plugin Configuration Reference"
+sidebarTitle: "Plugin Config"
+description: "Configure the core Dimensions plugin settings in config.yml to control portal search behaviour, teleportation, debugging verbosity, and more."
+---
+
+The main configuration file for Dimensions lives at `./plugins/Dimensions/config.yml`. Every time you change a value, run `/dim reload` so the plugin picks up your edits without restarting the server. The options below control global behaviour that applies to every portal on your server — per-portal settings are managed in each portal's own `.yml` file.
+
+## Full Example `config.yml`
+
+<CodeGroup>
+
+```yaml config.yml
+checkForUpdatesOnStartup: false
+searchRadius: 128
+safeSpotSearchRadius: 16
+debugLevel: 2
+enableNetherPortalEffect: true
+fallbackWorld: world
+configVersion: 1
+consumeItems: true
+searchSameAxis: false
+searchSameSize: false
+searchFirstClonePortal: true
+enableEntitiesTeleport: false
+updateEveryTick: 7
+```
+
+</CodeGroup>
+
+## Option Reference
+
+<ParamField path="checkForUpdatesOnStartup" type="boolean" default="false">
+  When set to `true`, Dimensions checks for available addon updates every time the server starts and installs any new versions it finds automatically.
+</ParamField>
+
+<ParamField path="searchRadius" type="integer" default="128">
+  The block radius Dimensions searches when looking for an already-built, active portal at the destination. Increase this value if players frequently land inside walls; decrease it on servers with many closely spaced portals to reduce false matches.
+</ParamField>
+
+<ParamField path="safeSpotSearchRadius" type="integer" default="16">
+  The half-width (in blocks) of the square area Dimensions scans when it needs to find a safe location to construct an exit portal. At the default value of `16`, the plugin searches a 32 × 32 block area centred on the calculated destination.
+</ParamField>
+
+<ParamField path="debugLevel" type="integer" default="2">
+  Controls how much information Dimensions writes to the server console. Lower numbers produce more output; higher numbers suppress it.
+
+  | Value | Level      |
+  |-------|------------|
+  | `0`   | VERY_HIGH  |
+  | `1`   | HIGH       |
+  | `2`   | MEDIUM     |
+  | `3`   | LOW        |
+  | `4`   | VERY_LOW   |
+  | `5`   | DEBUG      |
+
+  Set to `5` while troubleshooting, then return to `2` for normal operation.
+</ParamField>
+
+<ParamField path="enableNetherPortalEffect" type="boolean" default="true">
+  When `true`, players see the swirling nether portal visual effect on their screen as they enter any Dimensions portal. Set to `false` to remove the effect for a cleaner experience with custom portal themes.
+</ParamField>
+
+<ParamField path="fallbackWorld" type="string" default="world">
+  The name of the world Dimensions uses as a fallback if it cannot resolve a portal's configured destination world. Set this to the primary world your players inhabit — for example, `survivalWorld` — so they never end up somewhere unexpected.
+</ParamField>
+
+<ParamField path="configVersion" type="integer">
+  An internal version marker used by Dimensions to manage configuration migrations. **Do not change this value** — modifying it may corrupt your configuration or prevent the plugin from loading correctly.
+</ParamField>
+
+<Warning>
+  Never manually edit `configVersion`. Dimensions sets this automatically during updates.
+</Warning>
+
+<ParamField path="consumeItems" type="boolean" default="true">
+  When `true`, the item used to ignite a portal (for example, a Flint and Steel) loses durability or is consumed. Set to `false` to make ignition items indestructible, which is useful on creative or roleplay servers.
+</ParamField>
+
+<ParamField path="searchSameAxis" type="boolean" default="false">
+  When `true`, the portal search algorithm prioritises existing portals that are oriented along the same axis (north–south or east–west) as the source portal. Enable this if you want players to consistently arrive at portals facing the same direction.
+</ParamField>
+
+<ParamField path="searchSameSize" type="boolean" default="false">
+  When `true`, Dimensions only matches existing portals that have the same frame dimensions as the source portal. Useful if you use differently sized portals to represent different destination tiers.
+</ParamField>
+
+<ParamField path="searchFirstClonePortal" type="boolean" default="true">
+  When `true`, Dimensions first tries to find an existing portal that matches both the same axis and the same size before falling back to the broader `searchSameAxis` and `searchSameSize` checks. Disable this to always use the individual axis/size filters independently.
+</ParamField>
+
+<Tip>
+  `searchFirstClonePortal` only has an effect when at least one of `searchSameAxis` or `searchSameSize` is also `true`.
+</Tip>
+
+<ParamField path="enableEntitiesTeleport" type="boolean" default="false">
+  When `true`, non-player entities (mobs, minecarts, item frames, etc.) that walk into a portal are teleported just like players. The `updateEveryTick` interval governs how often the plugin checks for entities near portals.
+</ParamField>
+
+<ParamField path="updateEveryTick" type="integer" default="7">
+  Determines how frequently (in server ticks) Dimensions checks whether any entities are standing inside a portal and should be teleported. This check does **not** apply to players, who are handled by a separate event listener. A lower value is more responsive but increases server load.
+</ParamField>
+
+<Note>
+  There are 20 server ticks per second. At the default of `7`, entity proximity is checked roughly 2–3 times per second.
+</Note>

@@ -1,0 +1,87 @@
+---
+title: "Custom Lighter Addon: Use Custom Items as Portal Lighters"
+sidebarTitle: "Custom Lighter"
+description: "Use items from Oraxen, ItemsAdder, or CustomItems as the portal lighter, frame block, or inside block — integrating custom item plugins into Dimensions portals."
+---
+
+The Custom Lighter addon bridges Dimensions with popular custom item plugins. Instead of using a standard flint and steel, you can require a specific custom item to ignite a portal. You can also replace the portal's frame blocks and inner portal blocks with custom blocks from the same plugins — giving you full control over the portal's visual identity.
+
+<Info>
+  The Custom Lighter addon supports three custom item plugins:
+
+  - **[Oraxen](https://www.spigotmc.org/resources/oraxen.72448/)** — prefix your item ID with `ORAXEN:`
+  - **[ItemsAdder](https://www.spigotmc.org/resources/itemsadder.73355/)** — prefix your item ID with `ITEMSADDER:`
+  - **[CustomItems](https://www.spigotmc.org/resources/custom-items.63848/)** — prefix your item ID with `CUSTOMITEMS:`
+
+  Make sure the relevant plugin is installed on your server before enabling this addon.
+</Info>
+
+## Configuration
+
+Add the following block to your portal's `.yml` file. Include only the fields you need — all three (`Item`, `FrameBlock`, `InsideBlock`) are optional independently.
+
+```yaml
+Addon:
+  CustomLighter:
+    Item:
+      - '<PLUGIN>:<itemid>'
+    FrameBlock: '<PLUGIN>:<blockid>'
+    InsideBlock: '<PLUGIN>:<blockid>'
+```
+
+| Field | Description |
+|---|---|
+| `Item` | A list of custom items that can be used to ignite the portal (acts as the lighter). |
+| `FrameBlock` | The custom block used as the portal frame material. |
+| `InsideBlock` | The custom block that replaces the default nether portal fill inside the frame. |
+
+Replace `<PLUGIN>` with one of `ORAXEN`, `ITEMSADDER`, or `CUSTOMITEMS`, and `<itemid>` / `<blockid>` with the identifier defined in that plugin.
+
+## Examples
+
+<Tabs>
+  <Tab title="Oraxen">
+    ```yaml
+    Addon:
+      CustomLighter:
+        Item:
+          - 'ORAXEN:amethyst_lighter'
+        FrameBlock: 'ORAXEN:custom_obsidian'
+        InsideBlock: 'ORAXEN:portal_fill'
+    ```
+  </Tab>
+  <Tab title="ItemsAdder">
+    ```yaml
+    Addon:
+      CustomLighter:
+        Item:
+          - 'ITEMSADDER:realcraft:magic_torch'
+        FrameBlock: 'ITEMSADDER:realcraft:dark_stone'
+        InsideBlock: 'ITEMSADDER:realcraft:portal_block'
+    ```
+  </Tab>
+  <Tab title="CustomItems">
+    ```yaml
+    Addon:
+      CustomLighter:
+        Item:
+          - 'CUSTOMITEMS:emerald_lighter'
+        FrameBlock: 'CUSTOMITEMS:ancient_block'
+        InsideBlock: 'CUSTOMITEMS:void_fill'
+    ```
+  </Tab>
+</Tabs>
+
+## Setting Items via Command
+
+For vanilla Minecraft items (not from a custom item plugin), use the in-game commands to set the lighter, frame block, or inside block by holding the desired item:
+
+| Command | Description |
+|---|---|
+| `/dim setLighter <portal>` | Sets the currently held item as the portal lighter |
+| `/dim setFrameBlock <portal>` | Sets the currently held block as the frame material |
+| `/dim setInsideBlock <portal>` | Sets the currently held block as the inside portal block |
+
+<Warning>
+  After changing any custom item or block assignment (whether via config or command), you must **restart the server** for the changes to take effect. A plugin reload is not sufficient.
+</Warning>

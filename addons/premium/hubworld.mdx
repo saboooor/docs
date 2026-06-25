@@ -1,0 +1,79 @@
+---
+title: "Hub World Addon: Central Hub Portal Management"
+sidebarTitle: "Hub World"
+description: "Designate a hub world so portals from any location send players to a central hub, and using a portal in the hub returns them to where they came from."
+---
+
+The Hub World addon creates a bidirectional hub-and-spoke portal system. You designate one world as the hub and register a set of portal locations within it. When a player uses a Dimensions portal from anywhere on the map, they are sent to one of the hub portals. When they then use a portal from inside the hub, they are returned to the last portal they came from. This pattern is perfect for lobby or spawn servers where you want players to navigate between worlds through a single central hub.
+
+## How It Works
+
+1. A player on any server world uses a Dimensions portal.
+2. The addon intercepts the teleport and sends the player to a hub portal instead of the normal destination.
+3. The addon remembers which portal the player came from.
+4. When the player uses a portal from inside the hub world, they are returned to the origin portal.
+
+<Tip>
+  Use the `/dim addHub` command while looking at a portal to register it as a hub portal — you do not need to manually enter coordinates in the config. The command adds the location directly to the `Portals.List`.
+</Tip>
+
+## Configuration
+
+Add the following block to your portal's `.yml` file:
+
+```yaml
+Addon:
+  Hub:
+    World: '<hub_world>'
+    Portals:
+      List:
+        # - world,x,y,z
+      Mode: <mode>
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `World` | String | The name of the world to treat as the hub. Set to `'false'` (or remove the line) to disable the hub for this portal. |
+| `Portals.List` | List | The coordinates of each hub portal, in `world,x,y,z` format. Use `/dim addHub` to populate this automatically. |
+| `Portals.Mode` | String | How to select a hub portal when multiple are registered. See options below. |
+
+### Hub Selection Modes
+
+| Mode | Behaviour |
+|---|---|
+| `random` | Teleports the player to a randomly chosen portal from the list each time. |
+| `firstToLast` | Teleports the player to the first currently-lit portal in the list, working from top to bottom. |
+
+<Warning>
+  If a hub portal is broken (unlit), it is **not** automatically removed from the list. If **all** hub portals are broken at the same time, Dimensions cannot deliver players to the hub and their return destination is lost. Keep at least one hub portal lit at all times.
+</Warning>
+
+## Full Example
+
+The following config turns the portal into a hub-aware portal. Players who use it are sent to a random active portal in the `hub` world, and using a portal from `hub` returns them to their origin:
+
+```yaml
+Addon:
+  Hub:
+    World: 'hub'
+    Portals:
+      List:
+        - 'hub,100,64,200'
+        - 'hub,150,64,200'
+        - 'hub,200,64,200'
+      Mode: random
+```
+
+## Adding Hub Portals via Command
+
+Rather than editing the config manually, stand in front of a lit hub portal and run:
+
+```
+/dim addHub <portalName>
+```
+
+Dimensions will append the portal's coordinates to the `Portals.List` automatically.
+
+<Note>
+  The `World` field and the `Portals.List` serve different purposes. Setting `World` to a world name redirects **all** portal traffic through the hub world. If you set `World` to `'false'`, the `Portals.List` becomes active — players are teleported directly to a location from the list rather than to a hub world. Choose the approach that fits your server's design.
+</Note>

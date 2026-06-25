@@ -1,0 +1,105 @@
+---
+title: "PortalGeometry API: Custom Portal Shapes"
+sidebarTitle: "PortalGeometry"
+description: "Learn how to extend PortalGeometry to implement non-rectangular portals, unusual orientations, and custom build and detection logic for Dimensions."
+---
+
+`PortalGeometry` controls how Dimensions detects portal structures in the world, determines whether an entity is inside a portal, and builds exit portals at a destination. The default implementation handles standard rectangular vertical portals. Override it when your portal type uses a different shape, a horizontal orientation, or any detection logic that the default geometry cannot express.
+
+<Warning>
+  `PortalGeometry` is scheduled to change in a future Dimensions update. Keep your geometry implementation as self-contained as possible so it is easy to migrate.
+</Warning>
+
+## When to Use a Custom PortalGeometry
+
+You need a custom `PortalGeometry` when your portal type has non-standard characteristics — for example, the **HorizontalPortals** addon ships its own `HorizontalPortalGeometry` because Dimensions' default geometry only handles vertical frames. Other cases include:
+
+- Portals shaped as circles, crosses, or other non-rectangular frames.
+- Portals that can face any direction beyond the standard X/Z axes.
+- Detection logic that depends on block patterns rather than bounding boxes.
+
+## Creating a Custom PortalGeometry
+
+Extend `PortalGeometry` and implement the four required methods below. Every method must be present for Dimensions to function correctly with your geometry class.
+
+```java
+// Return a new instance of your geometry class
+public PortalGeometry createGeometry(Vector min, Vector max)
+
+// Find the portal structure at a given location
+public PortalGeometry getPortal(CustomPortal customPortal, Location loc)
+
+// Return true if location is inside the portal
+public boolean isInside(Location location, boolean outside, boolean corner)
+
+// Build an exit portal at the given location
+public void buildPortal(Location newLocation, World destinationWorld, CustomPortal customPortal)
+```
+
+### Full Example Class
+
+```java
+public class CustomPortalGeometry extends PortalGeometry {
+
+    protected CustomPortalGeometry(Vector min, Vector max) {
+        super(min, max);
+
+        // If you change min or max here, you MUST update the bounding box.
+        // Without this, entities teleport using the default bounding box
+        // generated from the original min/max vectors.
+        // getBoundingBox().copy(BoundingBox.of(getInsideMin(), getInsideMax()));
+    }
+
+    // Required — Dimensions calls this to create instances of your geometry
+    public PortalGeometry createGeometry(Vector min, Vector max) {
+        return new CustomPortalGeometry(min, max);
+    }
+
+    public PortalGeometry getPortal(CustomPortal customPortal, Location loc) {
+
+        // Perform your structure detection here. Once you have determined
+        // the min and max corners of the portal, return a new instance.
+        // Even non-rectangular portals must provide a min/max bounding box;
+        // handle finer shape checks inside isInside().
+
+        return new CustomPortalGeometry(min, max);
+    }
+
+    public boolean isInside(Location location, boolean outside, boolean corner) {
+
+        // Return true if the given location is within the portal interior.
+        // When outside == true, you MUST include the frame blocks as well,
+        // or the plugin may fail to detect portal interactions correctly.
+        // When corner == true, include corner blocks in your check.
+
+        return false;
+    }
+
+    @Override
+    public void buildPortal(Location newLocation, World destinationWorld, CustomPortal customPortal) {
+
+        // Build the exit portal in destinationWorld.
+        // newLocation is PortalGeometry#min — the bottom corner of the portal.
+        // Build upward and along +x or +z depending on the portal's Axis.
+
+    }
+}
+```
+
+## Key Implementation Notes
+
+**Bounding box updates** — if you modify the `min` or `max` vectors in your constructor, call `getBoundingBox().copy(BoundingBox.of(getInsideMin(), getInsideMax()))` immediately after. Skipping this causes entities to teleport using the wrong bounding box.
+
+**`isInside` flags** — the `outside` flag expands the check to include the frame; the `corner` flag includes corner positions. Failing to honour these flags will cause Dimensions to miss legitimate interactions at the edges of your portal.
+
+**`buildPortal` origin** — `newLocation` is always `PortalGeometry#min`, the minimum corner of the new portal. Place your blocks moving upward (increasing Y) and along the positive X or Z axis to match the portal's orientation axis.
+
+## Registering Your Geometry
+
+Once you have implemented your class, register it for a specific portal type using:
+
+```java
+PortalGeometry.setCustomGeometry(customPortal, new CustomPortalGeometry(min, max));
+```
+
+Call this inside your addon's `registerPortal(YamlConfiguration config, CustomPortal portal)` override so it runs once per portal type when Dimensions loads its portal definitions.

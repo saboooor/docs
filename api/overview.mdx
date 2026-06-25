@@ -1,0 +1,48 @@
+---
+title: "Dimensions Developer API: Build Custom Addons"
+sidebarTitle: "Overview"
+description: "Use the Dimensions API to build addons that extend and customize portal behavior beyond what the base plugin provides."
+---
+
+The Dimensions API lets you write Java addons that hook into portal ignition, teleportation, and destruction — giving you full control over how portals behave in your server. Addons are self-contained JARs that Dimensions discovers and loads at startup using Java's standard `ServiceLoader` mechanism, so there is no configuration required on the server side beyond dropping the file in the right folder.
+
+## Adding Dimensions to Your Project
+
+To start building an addon, download `Dimensions.jar` from the [SpigotMC resource page](https://www.spigotmc.org/resources/dimensions-custom-portals.57542/) and add it to your project's build path. You do not need to shade it into your addon — it will be present on the server at runtime.
+
+<Note>
+  Add Dimensions as a `compileOnly` (Gradle) or `provided` (Maven) dependency so it is not bundled into your addon JAR.
+</Note>
+
+## Resources
+
+| Resource | Link |
+|---|---|
+| Javadocs | [astaspasta.alwaysdata.net/javadocs](https://astaspasta.alwaysdata.net/javadocs/) |
+| Source Code | [github.com/xXastaspastaXx/Dimensions3](https://github.com/xXastaspastaXx/Dimensions3) |
+| SpigotMC | [Dimensions — Custom Portals](https://www.spigotmc.org/resources/dimensions-custom-portals.57542/) |
+
+## Utility Classes
+
+Dimensions exposes three utility classes that you can use anywhere in your addon code:
+
+- **[DimensionsSettings](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/DimensionsSettings.html)** — access the plugin's configuration values at runtime.
+- **[DimensionsUtils](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/DimensionsUtils.html)** — general-purpose helper methods for working with portals and worlds.
+- **[DimensionsDebbuger](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/DimensionsDebbuger.html)** — log debug output through the Dimensions logging system.
+
+## Where to Go Next
+
+<CardGroup cols={2}>
+  <Card title="Creating an Addon" icon="hammer" href="/api/creating-an-addon">
+    Step-by-step guide to setting up your project, writing your main class, and registering your addon with ServiceLoader.
+  </Card>
+  <Card title="Example Addon" icon="code" href="/api/example-addon">
+    A complete, working addon that spawns explosion particles when a portal is ignited by a player with the right permission.
+  </Card>
+  <Card title="API Reference" icon="book" href="/api/reference/custom-portal">
+    Detailed documentation for CustomPortal, CompletePortal, and PortalGeometry — the core classes you will interact with.
+  </Card>
+  <Card title="Events" icon="bolt" href="/api/reference/events">
+    Reference for the three cancellable events Dimensions fires: use, ignite, and break.
+  </Card>
+</CardGroup>

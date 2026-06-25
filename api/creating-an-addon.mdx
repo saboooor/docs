@@ -1,0 +1,87 @@
+---
+title: "Creating a Dimensions Addon: Step-by-Step Guide"
+sidebarTitle: "Creating an Addon"
+description: "Set up a Java project, write your DimensionsAddon main class, register it with ServiceLoader, and deploy your addon to a Dimensions server."
+---
+
+Building a Dimensions addon is straightforward: you create a Java project, extend the `DimensionsAddon` base class, optionally listen for events, and tell Dimensions where to find your class through a ServiceLoader registration file. The steps below walk you through the full process from an empty project to a deployable JAR.
+
+<Steps>
+  <Step title="Create your project and add Dimensions to the build path">
+    Create a new Java project in your IDE of choice. Download `Dimensions.jar` from the [SpigotMC resource page](https://www.spigotmc.org/resources/dimensions-custom-portals.57542/) and add it to your build path as a compile-only dependency — do not bundle it into your addon JAR.
+
+    You will also need the Bukkit/Spigot API on your build path, since Dimensions itself depends on it.
+  </Step>
+
+  <Step title="Create your main class">
+    Your main class must extend `DimensionsAddon`. If you want to listen to [Dimensions events](/api/reference/events), also implement `Listener`.
+
+    ```java
+    import me.xxastaspastaxx.dimensions.addons.DimensionsAddon;
+    import me.xxastaspastaxx.dimensions.addons.DimensionsAddonPriority;
+
+    public class MyAddon extends DimensionsAddon {
+        public MyAddon() {
+            super("MyAddon", "1.0.0", "My addon description", DimensionsAddonPriority.NORMAL);
+        }
+    }
+    ```
+
+    The `super(...)` call accepts four arguments:
+    - **name** — a unique display name for your addon.
+    - **version** — the minimum Dimensions version your addon targets.
+    - **description** — a short description shown in logs.
+    - **priority** — controls load order relative to other addons (`LOW`, `NORMAL`, or `HIGH`).
+  </Step>
+
+  <Step title="Override onEnable to register your listener">
+    Override `onEnable` to run setup logic when Dimensions activates your addon. If your class implements `Listener`, register it here so Bukkit routes events to your handlers.
+
+    ```java
+    @Override
+    public void onEnable(Dimensions pl) {
+        Bukkit.getPluginManager().registerEvents(this, pl);
+    }
+    ```
+
+    You can also override `onLoad` to check for optional dependencies, `onDisable` to clean up, and `registerPortal` to receive each portal's config at load time.
+  </Step>
+
+  <Step title="Create the ServiceLoader registration file">
+    Dimensions uses Java's `ServiceLoader` to discover addons. You must create a specific file at the exact path below inside your `src` directory:
+
+    ```
+    src/main/java/META-INF/services/
+    ```
+
+    Inside the `services` folder, create a file named **exactly**:
+
+    ```
+    me.xxastaspastaxx.dimensions.addons.DimensionsAddon
+    ```
+
+    Open that file and enter the fully-qualified class name of your main class on a single line:
+
+    ```
+    com.yourpackage.youraddon.MyAddon
+    ```
+
+    <Info>
+      The file name must match the service interface exactly — `me.xxastaspastaxx.dimensions.addons.DimensionsAddon` — or Dimensions will not find your addon. This is a requirement of the Java `ServiceLoader` specification, not a Dimensions convention.
+    </Info>
+  </Step>
+
+  <Step title="Build your addon JAR and deploy it">
+    Build your project into a JAR file, then place the JAR in your server's addon directory:
+
+    ```
+    ./plugins/Dimensions/Addons/
+    ```
+
+    Restart your server. Dimensions will load all JARs in that folder and activate any that contain a valid ServiceLoader registration.
+  </Step>
+</Steps>
+
+<Tip>
+  See a fully working implementation in the [Example Addon](/api/example-addon) — it covers all of these steps with real event-handling code you can copy and adapt.
+</Tip>

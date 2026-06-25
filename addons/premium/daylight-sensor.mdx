@@ -1,0 +1,76 @@
+---
+title: "Daylight Sensor Addon: Time-Based Portal Access"
+sidebarTitle: "Daylight Sensor"
+description: "Restrict portal usage to specific in-game time windows so that portals only activate during the day, only at night, or any custom range you define."
+---
+
+The Daylight Sensor addon lets you gate portal ignition behind the server's in-game clock. You define a start time and a stop time, and Dimensions will prevent players from lighting or using the portal outside that window — showing a configurable denial message when the time is not allowed.
+
+## How It Works
+
+Dimensions reads the in-game time (measured in ticks, 0–24000) and compares it against your `StartAllow` and `StopAllow` values. The portal can only be ignited while the current time falls within that range.
+
+<Tip>
+  Setting `StartAllow` **higher** than `StopAllow` inverts the window — the portal becomes active after `StartAllow` and remains active until `StopAllow` the **next** day. This is perfect for night-only portals.
+</Tip>
+
+<Note>
+  Setting `StartAllow` and `StopAllow` to the **same value** disables the addon entirely for that portal.
+</Note>
+
+## Configuration
+
+Add the following block to your portal's `.yml` file:
+
+```yaml
+Addon:
+  DayLightSensor:
+    StartAllow: '<start_time>'
+    StopAllow: '<stop_time>'
+    DenyMessage: '<message>'
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `StartAllow` | Integer | The in-game tick at which the portal becomes igniteable. |
+| `StopAllow` | Integer | The in-game tick at which the portal stops being igniteable. |
+| `DenyMessage` | String | The message shown to the player when they try to use the portal outside the allowed window. |
+
+### Minecraft Time Reference
+
+Minecraft's in-game day runs from tick `0` to tick `24000`. Use the table below as a reference when choosing your values:
+
+| In-Game Event | Approximate Tick |
+|---|---|
+| Sunrise | 0 |
+| Noon | 6000 |
+| Sunset | 12000 |
+| Midnight | 18000 |
+
+## Example: Day-Only Portal
+
+The following configuration allows the portal to be used only during the daytime hours (sunrise to sunset):
+
+```yaml
+Addon:
+  DayLightSensor:
+    StartAllow: '0'
+    StopAllow: '12000'
+    DenyMessage: '&cThis portal only works during the day!'
+```
+
+## Example: Night-Only Portal
+
+By setting `StartAllow` higher than `StopAllow`, the portal becomes active from dusk through dawn:
+
+```yaml
+Addon:
+  DayLightSensor:
+    StartAllow: '13000'
+    StopAllow: '23000'
+    DenyMessage: '&cThis portal only opens at night. Come back after dark.'
+```
+
+<Warning>
+  The `DenyMessage` supports color codes (e.g., `&c` for red). Make sure to wrap the value in single quotes to avoid YAML parsing issues with special characters.
+</Warning>

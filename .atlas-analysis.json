@@ -1,23 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "name": "Dimensions",
+  "projectType": "framework",
+  "projectName": "Dimensions",
+  "projectDescription": "A Minecraft server plugin that lets you create custom nether-styled portals of any material to teleport players between worlds — or even across servers.",
   "theme": "almond",
-  "favicon": "https://media.brand.dev/16ffc0c7-e90f-4028-9260-10da69518485.jpg",
-  "logo": {
-    "light": "https://media.brand.dev/782de6e9-345d-4ba5-b61a-b09a021320e6.png",
-    "dark": "https://media.brand.dev/782de6e9-345d-4ba5-b61a-b09a021320e6.png"
-  },
-  "colors": {
-    "primary": "#ca9121",
-    "light": "#5f574a",
-    "dark": "#dfdfdf"
-  },
-  "navbar": {
-    "primary": {
-      "type": "github",
-      "href": "https://github.com/saboooor/Dimensions"
-    }
-  },
+  "primaryColor": "#ca9121",
+  "lightColor": "#5f574a",
+  "darkColor": "#dfdfdf",
   "navigation": {
     "tabs": [
       {
@@ -108,5 +96,34 @@
         ]
       }
     ]
-  }
+  },
+  "keyFeatures": [
+    "Custom portal frames built from any Minecraft block material",
+    "Nether-portal style teleportation between worlds",
+    "Visual Portal Creator web tool for zero-YAML portal setup",
+    "Addon system for extending portal behavior (free & premium)",
+    "Cross-server teleportation via BungeeCord / Velocity addon",
+    "Particle packs with a scripting language for custom portal effects",
+    "ForceLink to manually pair two portals",
+    "Permission-gated portals, economy charges, timed self-destruct, and more"
+  ],
+  "publicApiSurface": [
+    "DimensionsAddon (base class for custom addons)",
+    "DimensionsAddon#onEnable(Dimensions)",
+    "CustomPortalUseEvent",
+    "CustomPortalIgniteEvent",
+    "CustomPortalBreakEvent",
+    "Dimensions#getCompletePortalManager()#createNew()",
+    "CompletePortal#setTag / getTag",
+    "CompletePortal#isActive()",
+    "CustomPortal#setInsideBlockData(BlockData)",
+    "PortalGeometry#setCustomGeometry(CustomPortal, PortalGeometry)",
+    "/dim help",
+    "/dim perms",
+    "/dim forceLink select",
+    "/dim forceLink set",
+    "/dim reload",
+    "/dim portals",
+    "/dim worlds"
+  ]
 }

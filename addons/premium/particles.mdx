@@ -1,0 +1,172 @@
+---
+title: "Particles Addon: Custom Portal Particle Effects"
+sidebarTitle: "Particles"
+description: "Build scripted particle packs that emit custom effects from your portals, using a YAML-based scripting system with math support and a visual web editor."
+---
+
+The Particles addon lets you attach fully custom particle effects to any portal. You write a **particle pack** — a YAML script that controls when, where, and how particles spawn — and reference it by filename in the portal's config. Multiple packs can run on the same portal at the same time. For those who prefer a visual approach, a web-based **Particles Editor** lets you build packs without writing raw YAML.
+
+<Warning>
+  If your `for` loop condition is never false (an infinite loop), it **will crash the server**. Always double-check the middle condition of every loop before deploying.
+</Warning>
+
+## Setup
+
+<Steps>
+  <Step title="Create the ParticlePacks folder">
+    Create the directory `./plugins/Dimensions/ParticlePacks/` if it does not already exist.
+  </Step>
+  <Step title="Create your particle pack file">
+    Inside `ParticlePacks/`, create a new `.yml` file — for example, `circle.yml`. This file contains your particle script.
+  </Step>
+  <Step title="Reference the pack in your portal config">
+    Open your portal's `.yml` file and add the Particles addon block. Use the filename **without** the `.yml` extension:
+
+    ```yaml
+    Addon:
+      Particles:
+        - 'circle'
+    ```
+
+    You can list multiple packs to run them simultaneously.
+  </Step>
+</Steps>
+
+## Particle Pack Structure
+
+A particle pack has two main sections: the **start** block (initialization) and the **body** (particle behavior).
+
+### The `start` Block
+
+The `start` block runs once when the pack loads. Use it to declare variables and set the execution frequency.
+
+```yaml
+start:
+  - 'frequency = 20'   # How often (in ticks) the body runs. 20 ticks = 1 second.
+  - 'amount = 50'
+  - 'radius = 4'
+```
+
+<Note>
+  The default frequency is `20` ticks (once per second). You only need to include `frequency` if you want a different interval. Variables must be numbers — integers or decimals.
+</Note>
+
+### The Body: `portal` and `tile`
+
+The body splits into two sections depending on the reference point for your particles:
+
+| Section | Reference Point |
+|---|---|
+| `portal` | The **center** of the portal |
+| `tile` | Each individual **portal block** |
+
+Within each section, you choose how the code runs:
+
+| Keyword | Behaviour |
+|---|---|
+| `play` | Runs its commands **once** per frequency tick |
+| `for` | Runs its commands in a **loop**, similar to a C-style for loop |
+
+```yaml
+# Run something once per tick for the entire portal center
+portal:
+  play:
+    - 'play FLAME locX locY locZ 5 0.3 0.3 0.3'
+
+# Run a loop for every portal block
+tile:
+  for:
+    i=0;i<10;i=i+1:
+      run0:
+        - 'play SMOKE_NORMAL locX locY locZ 1 0 0 0'
+```
+
+### For Loop Syntax
+
+A `for` loop key has three parts separated by `;`:
+
+1. **Initializer** — sets the starting value of the counter variable (`i=0`)
+2. **Condition** — the loop runs while this is true (`i<amount`)
+3. **Increment** — applied after each iteration (`i=i+1`)
+
+For loops can be **nested** — any child key that is itself a valid loop will run inside the parent loop.
+
+## Available Commands
+
+Use these commands inside `play` or `run` blocks:
+
+| Command | Description |
+|---|---|
+| `debug <text>` | Prints a variable value to the console. Does not perform operations — save results to a variable first. |
+| `play <type> <x> <y> <z> <count> <offsetX> <offsetY> <offsetZ> [DustOptions(Color(R,G,B),size)]` | Spawns particles. `DustOptions` only applies to `REDSTONE` particles. |
+
+Find the full list of particle type names in the [Spigot Particle Javadocs](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html).
+
+## Built-In Variables
+
+Dimensions automatically provides these variables in every pack. Their values depend on which section they are used in:
+
+| Variable | Description |
+|---|---|
+| `locX` | X coordinate of the reference point (portal center or individual block) |
+| `locY` | Y coordinate of the reference point |
+| `locZ` | Z coordinate of the reference point |
+| `portalHeight` | Height of the portal in blocks |
+| `portalWidth` | Width of the portal in blocks |
+
+## Math Support
+
+Variable expressions support standard math operations as well as trigonometric functions. You can use `sin()`, `cos()`, and other expressions directly in variable assignments:
+
+```yaml
+- 'angle = i * increment'
+- 'x = locX + (radius * cos(angle))'
+- 'z = locZ + (radius * sin(angle))'
+```
+
+## Example: Circle Particle Pack
+
+This complete example creates a glowing green circle around the portal center every second.
+
+```yaml
+start:
+  - 'amount = 50'
+  - 'radius = 4'
+  - 'increment = (2 * 3.14) / amount'
+  - 'frequency = 20'
+portal:
+  for:
+    i=0;i<amount;i=i+1:
+      run0:
+        - 'angle = i * increment'
+        - 'x = locX + (radius * cos(angle))'
+        - 'z = locZ + (radius * sin(angle))'
+        - 'play REDSTONE x locY z 3 0 0 0 DustOptions(Color(0,255,0),2)'
+```
+
+Save this as `circle.yml` in your `ParticlePacks/` folder, then add `'circle'` to the portal's `Particles` list.
+
+## Particles Editor
+
+The **Particles Editor** is a browser-based visual tool that simulates particle packs so you can preview effects before deploying them to your server. Build your pack by clicking through an Explorer panel rather than writing raw YAML, then export the result and drop it in your `ParticlePacks/` folder.
+
+<Tip>
+  Access the Particles Editor at [https://astaspasta.alwaysdata.net/](https://astaspasta.alwaysdata.net/). Note that the portal inside the editor cannot be rotated yet, so all particles will appear on the same Z axis in the preview — they render correctly in-game.
+</Tip>
+
+### Editor Workflow
+
+<Steps>
+  <Step title="Add start variables">
+    Click **start** in the Explorer panel. Select **Variable** in the Assets window, then click **Add**. Rename each `tempVariable` entry and set its value, then click **Save**.
+  </Step>
+  <Step title="Add a for loop">
+    Click **portal → for** in the Explorer, then select **For loop** from Assets. Configure the initializer, condition, and increment fields.
+  </Step>
+  <Step title="Add commands to the runnable">
+    Inside the loop, add Variable entries for computed values (angle, x, z) and a Particle entry for the `play` command.
+  </Step>
+  <Step title="Preview and export">
+    Click **Run** to preview the particle effect. When satisfied, export the YAML and save it to your `ParticlePacks/` folder.
+  </Step>
+</Steps>

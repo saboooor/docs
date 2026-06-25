@@ -1,0 +1,40 @@
+---
+title: "Download and Install Your Portal Config File"
+sidebarTitle: "Downloading"
+description: "Assign a portal ID, download the generated .yml config file, place it in the Portals folder, and restart your server to activate the portal in-game."
+---
+
+Once you have finished configuring your portal in the Portal Creator, the last step is to give it an identifier, download the generated config file, and install it on your server. The whole process takes under a minute.
+
+<Steps>
+  <Step title="Enter a portal ID">
+    Locate the **ID:** field in the top-left corner of the Portal Creator interface. Type the name you want to use for this portal — for example, `nether` or `end_portal`. This name becomes the portal's identifier in-game and is also used as the file name for the downloaded config.
+
+    <Warning>
+      The portal file name is the portal's identifier in-game. If you are using the Bungee addon to link portals across multiple servers, the portal ID **must be identical on every server** it appears on. A mismatch will prevent the cross-server link from working.
+    </Warning>
+  </Step>
+  <Step title="Download the config file">
+    Click **Portal Options** in the Portal Creator toolbar, then click **Download Config**. Your browser will download a `.yml` file named after the portal ID you entered.
+  </Step>
+  <Step title="Place the file in the Portals folder">
+    Move the downloaded `.yml` file into your server's Portals directory:
+
+    ```
+    ./plugins/Dimensions/Portals/
+    ```
+
+    If the `Portals` folder doesn't exist yet, create it — Dimensions will read any `.yml` file placed there on startup.
+  </Step>
+  <Step title="Restart the server">
+    Restart your Minecraft server to load the new portal configuration.
+
+    <Note>
+      Use a full server restart, not `/reload`. Dimensions reads portal configs during startup; a reload may not register the new portal correctly.
+    </Note>
+  </Step>
+</Steps>
+
+## Next steps
+
+Your portal is now active in-game. If you need to fine-tune settings that aren't exposed in the Portal Creator, you can open the downloaded `.yml` file in any text editor and edit it directly. See the [portal configuration reference](/configuration/portal-config) for a full breakdown of every available field.

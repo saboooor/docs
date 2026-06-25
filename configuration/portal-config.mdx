@@ -1,0 +1,123 @@
+---
+title: "Portal Configuration Options for Dimensions"
+sidebarTitle: "Portal Config"
+description: "Learn every configuration option available in each portal's .yml file, from frame materials and particle colours to teleport delay and world restrictions."
+---
+
+Each portal you create in Dimensions gets its own `.yml` file stored in `./plugins/Dimensions/Portals/`. The file name is the internal ID of the portal. Open the file in any text editor, adjust the options below to your liking, then run `/dim reload` to apply changes without restarting your server.
+
+## Full Example Portal File
+
+<CodeGroup>
+
+```yaml MyPortal.yml
+Enable: true
+DisplayName: 'Nether Gateway'
+
+Portal:
+  Frame:
+    Material: OBSIDIAN
+    Face: all
+  InsideMaterial: NETHER_PORTAL
+  LighterMaterial: FLINT_AND_STEEL
+  ParticlesColor: '255;80;0'
+  BreakEffect: BLOCK_GLASS_BREAK
+
+Options:
+  AllowedWorlds:
+    - 'all'
+    - '!world_the_end'
+  BuildExitPortal: true
+  TeleportDelay: 4
+  EnableParticles: true
+```
+
+</CodeGroup>
+
+## General Options
+
+<ParamField path="Enable" type="boolean" default="true">
+  Toggles the portal on or off. When set to `false`, the portal frame remains in the world but players can no longer activate or use it. Use this to temporarily disable a portal without deleting its configuration.
+</ParamField>
+
+<ParamField path="DisplayName" type="string" default="Unnamed">
+  A human-readable name for the portal. Dimensions uses this name in player-facing messages and the `/dim portals` list. Choose something descriptive so you and your players can easily identify it.
+</ParamField>
+
+## Portal Block Settings
+
+<ParamField path="Portal.Frame.Material" type="string" default="COBBLESTONE">
+  The Bukkit [Material](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html) name of the block that forms the portal's frame. Dimensions detects this block when scanning for a valid portal shape. You can use any solid block — for example, `OBSIDIAN`, `CRYING_OBSIDIAN`, or `GOLD_BLOCK`.
+</ParamField>
+
+<ParamField path="Portal.Frame.Face" type="string" default="all">
+  Restricts which orientations the portal frame can be built in. Accepted values are:
+
+  | Value    | Description                                      |
+  |----------|--------------------------------------------------|
+  | `all`    | Any orientation is accepted (default)            |
+  | `x`      | Frame must lie along the X axis                  |
+  | `z`      | Frame must lie along the Z axis                  |
+  | `y`      | Frame must lie along the Y axis (horizontal)     |
+  | `NORTH`  | Frame faces north                                |
+  | `SOUTH`  | Frame faces south                                |
+  | `EAST`   | Frame faces east                                 |
+  | `WEST`   | Frame faces west                                 |
+</ParamField>
+
+<ParamField path="Portal.InsideMaterial" type="string" default="NETHER_PORTAL">
+  The Bukkit Material that fills the interior of the portal once it is lit. `NETHER_PORTAL` produces the classic purple shimmer, but you can use any block material to create a unique visual — for instance, `WATER` or `END_PORTAL`.
+</ParamField>
+
+<ParamField path="Portal.LighterMaterial" type="string" default="FLINT_AND_STEEL">
+  The item a player must hold and right-click the frame with to ignite the portal. Use any valid Bukkit Material item name. Whether this item loses durability or is consumed depends on the `consumeItems` setting in `config.yml`.
+</ParamField>
+
+<ParamField path="Portal.ParticlesColor" type="string" default="0;0;0">
+  The colour of the particles emitted by the portal, expressed as `red;green;blue` where each channel is an integer from `0` to `255`. For example, `255;80;0` produces an orange glow. This option has no effect when `Options.EnableParticles` is `false`.
+</ParamField>
+
+<ParamField path="Portal.BreakEffect" type="string" default="BLOCK_GLASS_BREAK">
+  The sound played when the portal is broken or deactivated. Use any [Bukkit Sound](https://helpch.at/docs/1.9/index.html?org/bukkit/Sound.html) constant. The linked reference lists every available sound name for Bukkit 1.9 and later.
+</ParamField>
+
+## Behaviour Options
+
+<ParamField path="Options.AllowedWorlds" type="list" default="[]">
+  A list of world names from which players are permitted to use this portal. An empty list (`[]`) allows all worlds. You can also use the special keyword `all` to whitelist every world, then prefix specific world names with `!` to exclude them.
+
+  <CodeGroup>
+
+  ```yaml Allow all worlds except the End and Nether
+  Options:
+    AllowedWorlds:
+      - 'all'
+      - '!world_the_end'
+      - '!world_nether'
+  ```
+
+  ```yaml Only allow specific worlds
+  Options:
+    AllowedWorlds:
+      - 'survivalWorld'
+      - 'miningWorld'
+  ```
+
+  </CodeGroup>
+</ParamField>
+
+<ParamField path="Options.BuildExitPortal" type="boolean" default="true">
+  When `true`, Dimensions automatically constructs a matching exit portal at the destination if one does not already exist within `searchRadius` blocks. Set to `false` if you want to place exit portals manually or if the destination world is read-only.
+</ParamField>
+
+<ParamField path="Options.TeleportDelay" type="integer" default="4">
+  The number of seconds a player must stand inside the portal before being teleported. During this countdown the player sees a visual cue. Set to `0` for instant teleportation. Note that this delay also applies to entities when `enableEntitiesTeleport` is enabled in `config.yml`.
+</ParamField>
+
+<ParamField path="Options.EnableParticles" type="boolean" default="true">
+  When `true`, the portal continuously emits particles using the colour defined in `Portal.ParticlesColor`. Set to `false` to disable particles entirely for this portal, which can improve performance in areas with many active portals.
+</ParamField>
+
+<Tip>
+  After editing a portal file, always run `/dim reload` in-game to apply your changes immediately. You do not need to restart the server.
+</Tip>

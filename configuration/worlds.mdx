@@ -1,0 +1,78 @@
+---
+title: "Configure World Settings for Dimensions Portals"
+sidebarTitle: "World Settings"
+description: "Set per-world Y-level boundaries and size ratios in config.yml, and learn how to add pre-existing or freshly generated worlds to your Dimensions setup."
+---
+
+Dimensions needs to know a few things about each world you use with portals: how tall the world is, and how large it is. These values control where exit portals spawn vertically, and they let Dimensions accurately scale coordinates when a player crosses between worlds of different sizes. You configure all of this in the `Worlds` section of `./plugins/Dimensions/config.yml`.
+
+## The `Worlds` Block
+
+Add a named entry under `Worlds` for every world you want to customise. The world name must match the folder name of that world on your server (the same string you use in portal configuration files).
+
+<CodeGroup>
+
+```yaml config.yml — Worlds section
+Worlds:
+  survivalWorld:
+    MinHeight: 0
+    MaxHeight: 256
+    Size: 10000
+  miningWorld:
+    MinHeight: -64
+    MaxHeight: 320
+    Size: 5000
+  skyWorld:
+    MinHeight: 60
+    MaxHeight: 200
+```
+
+</CodeGroup>
+
+## Option Reference
+
+<ParamField path="Worlds.<world>.MinHeight" type="integer">
+  The minimum Y coordinate at which Dimensions will place an exit portal when building one in this world. Set this above the bedrock floor or below any terrain features you want to protect. For example, set `MinHeight: 0` to prevent portals spawning underground in a flat world.
+</ParamField>
+
+<ParamField path="Worlds.<world>.MaxHeight" type="integer">
+  The maximum Y coordinate at which Dimensions will place an exit portal in this world. Keep this below the build height limit of your world. For a standard Overworld-style world, `256` (1.17 and earlier) or `320` (1.18+) are sensible ceilings.
+</ParamField>
+
+<ParamField path="Worlds.<world>.Size" type="integer">
+  The effective radius of the world in blocks, used to calculate the coordinate scale ratio between the source and destination worlds. If you omit `Size`, Dimensions reads the world's current border size automatically.
+
+  > Set `Size` explicitly when you want a fixed ratio regardless of any admin changes to the world border.
+</ParamField>
+
+<Note>
+  When `Size` is not present in the config, Dimensions queries the world border at runtime. If you later change the world border with a `/worldborder` command, the ratio Dimensions uses will update accordingly.
+</Note>
+
+## Adding Worlds
+
+### Generate a New World
+
+If you need a brand-new world, install a world generation plugin before configuring Dimensions portals. Two popular options are:
+
+- [**Multiverse-Core**](https://www.spigotmc.org/resources/multiverse-core.390/) — a full-featured multi-world management suite with commands to create, import, and manage worlds.
+- [**MyWorlds**](https://www.spigotmc.org/resources/myworlds.39594/) — a lightweight alternative focused on world creation and per-world settings.
+
+Follow your chosen plugin's instructions to generate the world, then add the world name to the `Worlds` block above and reference it in your portal's destination configuration.
+
+### Use a Pre-existing World
+
+If you already have a world folder (for example, one downloaded from a map site or exported from another server), follow these steps:
+
+1. Place the world folder in your **server root directory** — the same directory that contains `server.properties` and your other world folders.
+2. Use the **exact folder name** as the world identifier in your portal configuration and in the `Worlds` block of `config.yml`.
+3. Restart the server (or use your world management plugin's import command) so the world loads.
+4. Add the world entry to `config.yml` and run `/dim reload`.
+
+<Tip>
+  The world folder name is case-sensitive on Linux servers. Make sure the name in `config.yml` and portal files exactly matches the folder name on disk.
+</Tip>
+
+<Info>
+  The `MinHeight` and `MaxHeight` values only affect where **exit portals are built**. They do not restrict which Y level a player can be at when they enter a source portal.
+</Info>

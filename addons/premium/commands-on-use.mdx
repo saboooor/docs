@@ -1,0 +1,76 @@
+---
+title: "Commands on Use Addon: Run Commands at Portal Use"
+sidebarTitle: "Commands on Use"
+description: "Execute player or console commands with full conditional logic and placeholder support every time a player uses a Dimensions portal."
+---
+
+The Commands on Use addon fires one or more commands whenever a player steps through a portal. Each command entry is self-contained — you define who runs it, under what conditions it fires, and the command itself. The addon supports a rich set of placeholders for portal context, and also integrates with PlaceholderAPI for even broader flexibility.
+
+## Configuration
+
+Add the `Commands` list under the `Addon:` section in your portal's `.yml` file. Each list entry is a single string with three parts separated by semicolons.
+
+```yaml
+Addon:
+  Commands:
+    - '<executor>;<condition>;<command>'
+```
+
+### Parts of Each Entry
+
+**`executor`** — Who runs the command. Use `player` to run it as the player who used the portal, or `console` to run it as the server console (useful for commands that require operator privileges).
+
+**`condition`** — A boolean expression that must evaluate to `true` for the command to fire. Use the placeholder variables listed below to build logic. Use `true` on its own to make a command always run. Supports `&&` (AND), `||` (OR), and parentheses for grouping.
+
+**`command`** — The command to execute, written without a leading `/`. Use placeholders anywhere in the command string.
+
+### Available Placeholders
+
+| Placeholder | Description |
+|---|---|
+| `%portal%` | The display name of the portal |
+| `%name%` | The internal name of the portal |
+| `%entity%` | The name of the player or entity type |
+| `%entityID%` | The UUID of the player or ID of the entity |
+| `%destinationWorld%` | The world the portal teleports to |
+| `%destinationX%` | Destination X coordinate |
+| `%destinationY%` | Destination Y coordinate |
+| `%destinationZ%` | Destination Z coordinate |
+| `%originalWorld%` | The world the player came from |
+| `%originalX%` | Original X coordinate |
+| `%originalY%` | Original Y coordinate |
+| `%originalZ%` | Original Z coordinate |
+| `%zAxis%` | `true` if the portal faces the X axis (built along the Z axis) |
+
+<Note>
+  Commands on Use also supports [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) placeholders. If PlaceholderAPI is installed, you can use any `%placeholder%` string from your installed PAPI expansions inside the command field.
+</Note>
+
+## Full Example
+
+```yaml
+Addon:
+  Commands:
+    - 'console;true;say %entity% used a portal!'
+    - 'player;%destinationWorld%==nether;give %entity% minecraft:torch 1'
+    - 'console;(%destinationWorld%==world6 && %entity%==player1) || %portal%==myPortal;broadcast VIP portal activated by %entity%!'
+```
+
+- The first entry fires every time any player uses the portal, broadcasting a server-wide message from the console.
+- The second entry fires only when the destination is the `nether` world, giving the player a torch as the player themselves.
+- The third entry fires only when a complex condition is met — the destination is `world6` and the user is `player1`, or alternatively the portal's name is `myPortal`.
+
+## Disabling Default Teleportation
+
+If you want Commands on Use to handle teleportation entirely — for example, by running a random-teleport command instead of Dimensions' built-in logic — add `DisableTeleport: true` to the `Addon:` block. This tells Dimensions to skip its own teleport step and leave movement entirely to your commands.
+
+```yaml
+Addon:
+  DisableTeleport: true
+  Commands:
+    - 'console;true;rtp %entity%'
+```
+
+<Tip>
+  Use `DisableTeleport: true` together with the [Random Location addon](/addons/premium/random-location) or a random-teleport plugin command to create portals that scatter players across the world each time they're used, with no fixed destination.
+</Tip>

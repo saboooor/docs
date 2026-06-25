@@ -1,0 +1,15 @@
+# Source: https://astaspastagam.gitbook.io/first-steps/configuring-dimensions/addons/premium-addons/pasted-portals-addon
+
+For the complete documentation index, see [llms.txt](https://astaspastagam.gitbook.io/first-steps/llms.txt). This page is also available as [Markdown](https://astaspastagam.gitbook.io/first-steps/configuring-dimensions/addons/premium-addons/pasted-portals-addon.md).
+
+## 
+
+What does it do?
+
+Supports [World Edit](https://dev.bukkit.org/projects/worldedit), [BentoBox](https://www.spigotmc.org/resources/bentobox-bskyblock-acidisland-skygrid-caveblock-aoneblock-boxed.73261/), [Iridium Skyblock](https://www.spigotmc.org/resources/iridium-skyblock-1-13-1-18.62480/) & [SuperiorSkyblock2](https://www.spigotmc.org/resources/%E2%9A%A1%EF%B8%8F-superiorskyblock2-%E2%9A%A1%EF%B8%8F-the-best-core-on-market-%E2%9A%A1%EF%B8%8F-1-19-1-support.87411/)
+
+After enabling it on config, portals will auto-ignite when they are edited by world edit, or generated in a world or from skyblock plugins. In order to ignite portals, there must be a sign inside a portal with "\[DIMENSIONS\]" in the first line and the name of the portal in the second one.
+
+[PreviousChargeOnUse addon](https://astaspastagam.gitbook.io/first-steps/configuring-dimensions/addons/premium-addons/chargeonuse-addon) [NextCustom lighter addon](https://astaspastagam.gitbook.io/first-steps/configuring-dimensions/addons/premium-addons/custom-lighter-addon)
+
+Last updated 3 years ago

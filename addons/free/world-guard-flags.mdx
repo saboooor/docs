@@ -1,0 +1,36 @@
+---
+title: "WorldGuard Flags Addon for Dimensions Portals"
+sidebarTitle: "WorldGuard Flags"
+description: "Add three WorldGuard region flags to block portal ignition, destruction, and use inside any protected region on your server."
+---
+
+The WorldGuard Flags addon bridges Dimensions and WorldGuard by registering three brand-new region flags. Once the addon is installed, you can apply these flags to any WorldGuard region exactly as you would any built-in flag — giving you fine-grained control over which players can interact with portals inside your protected areas.
+
+<Info>
+  This addon requires both [WorldEdit](https://dev.bukkit.org/projects/worldedit)
+  and [WorldGuard](https://dev.bukkit.org/projects/worldguard) to be installed
+  on your server. Make sure both plugins are present and up-to-date before
+  adding the Dimensions WorldGuard Flags jar.
+</Info>
+
+## New Flags
+
+The addon adds the following three flags to WorldGuard's flag registry:
+
+| Flag | Effect |
+|---|---|
+| `ignite-custom-portal` | Prevents players from igniting Dimensions portals inside the region |
+| `destroy-custom-portal` | Prevents players from destroying Dimensions portals inside the region |
+| `use-custom-portal` | Prevents players from travelling through Dimensions portals inside the region |
+
+## Setting the Flags
+
+Set these flags on a region the same way you would set any other WorldGuard flag. For example, to prevent players from using portals in a region called `spawn`:
+
+```
+/rg flag spawn use-custom-portal deny
+/rg flag spawn ignite-custom-portal deny
+/rg flag spawn destroy-custom-portal deny
+```
+
+You can also scope each flag to specific membership groups (members, non-members) using WorldGuard's standard `-g` syntax, giving you the flexibility to allow trusted players to keep using portals while restricting everyone else.

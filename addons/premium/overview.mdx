@@ -1,0 +1,91 @@
+---
+title: "Premium Addons for Dimensions Custom Portals"
+sidebarTitle: "Overview"
+description: "Explore the full suite of premium addons bundled with Dimensions Full — each one extends your portals with powerful new behaviors and controls."
+---
+
+Premium addons are exclusive features included with the [FULL version of Dimensions](https://www.spigotmc.org/resources/dimensions-custom-portals-full.83982/). They extend your portals with capabilities like economy charging, permission gating, timed destruction, particle effects, and much more. Each addon is a separate `.jar` file that you drop into your server and enable per-portal in its configuration file.
+
+## Installation
+
+<Steps>
+  <Step title="Download the addon JARs">
+    Obtain the addon `.jar` files from your purchase on SpigotMC. All premium addons are bundled with the full version of Dimensions.
+  </Step>
+  <Step title="Place the JARs in the Addons folder">
+    Drop each addon `.jar` into the following directory on your server:
+
+    ```
+    ./plugins/Dimensions/Addons/
+    ```
+  </Step>
+  <Step title="Restart your server">
+    Perform a full server restart (not just a reload) so Dimensions picks up the new addon files.
+  </Step>
+  <Step title="Configure the addon in your portal YAML">
+    Open the `.yml` file for the portal you want to enhance and add the relevant `Addon:` block as described in each addon's documentation page.
+  </Step>
+</Steps>
+
+<Note>
+  Each addon is configured individually per portal. You can mix and match multiple addons on the same portal by stacking their keys under the shared `Addon:` parent in your portal's `.yml` file.
+</Note>
+
+## Available Premium Addons
+
+<CardGroup cols={2}>
+  <Card title="Unbreakable" href="/addons/premium/unbreakable">
+    Prevent players and entities from destroying your portals.
+  </Card>
+  <Card title="Limited Uses" href="/addons/premium/limited-uses">
+    Auto-destruct a portal after it has been used a set number of times.
+  </Card>
+  <Card title="Timed Portals" href="/addons/premium/timed-portals">
+    Schedule portals to auto-destruct after a configured time window.
+  </Card>
+  <Card title="Permissions" href="/addons/premium/permissions">
+    Restrict portal ignition and use to players with a specific permission node.
+  </Card>
+  <Card title="Charge on Use" href="/addons/premium/charge-on-use">
+    Withdraw currency from a player's balance every time they use a portal.
+  </Card>
+  <Card title="Commands on Use" href="/addons/premium/commands-on-use">
+    Execute player or console commands with conditional logic when a portal is used.
+  </Card>
+  <Card title="Message on Use" href="/addons/premium/message-on-use">
+    Send a custom message to players when they step through a portal.
+  </Card>
+  <Card title="Random Location" href="/addons/premium/random-location">
+    Teleport players to a random location within a configured range instead of a fixed destination.
+  </Card>
+  <Card title="Biomes" href="/addons/premium/biomes">
+    Restrict portal usage to specific biomes, or block use in chosen biomes.
+  </Card>
+  <Card title="Daylight Sensor" href="/addons/premium/daylight-sensor">
+    Gate portal availability based on in-game time of day or weather conditions.
+  </Card>
+  <Card title="Particles" href="/addons/premium/particles">
+    Attach custom particle packs to portals for visual flair.
+  </Card>
+  <Card title="Stylish Portals" href="/addons/premium/stylish-portals">
+    Customize the visual appearance of your portal frames and interiors.
+  </Card>
+  <Card title="Pasted Portals" href="/addons/premium/pasted-portals">
+    Use WorldEdit schematics to paste structures when a portal is ignited or used.
+  </Card>
+  <Card title="Custom Lighter" href="/addons/premium/custom-lighter">
+    Define custom items that players must use to ignite a portal.
+  </Card>
+  <Card title="Better Portals" href="/addons/premium/better-portals">
+    Enhance default portal behavior with smoother teleportation mechanics.
+  </Card>
+  <Card title="BungeeCord" href="/addons/premium/bungee">
+    Teleport players across servers in a BungeeCord network via portals.
+  </Card>
+  <Card title="Hub World" href="/addons/premium/hubworld">
+    Designate a hub world that portals always return players to.
+  </Card>
+  <Card title="LightAPI" href="/addons/premium/lightapi">
+    Add dynamic lighting effects to portals using the LightAPI library.
+  </Card>
+</CardGroup>

@@ -1,0 +1,55 @@
+---
+title: "Unbreakable Addon: Protect Your Dimensions Portals"
+sidebarTitle: "Unbreakable"
+description: "Prevent players, entities, pistons, and other sources from destroying your Dimensions portals using the Unbreakable addon."
+---
+
+The Unbreakable addon lets you choose exactly which destruction sources a portal should be immune to. Rather than making every portal completely indestructible by default, the addon gives you granular control — you can block creeper explosions while still allowing admins to break the frame manually, or lock down the portal entirely from all sources.
+
+## Configuration
+
+Add the `Unbreakable` key under the `Addon:` section in your portal's `.yml` file. The value is a list of destruction sources to block.
+
+```yaml
+Addon:
+  Unbreakable:
+    - '<input>'
+```
+
+### Allowed Input Values
+
+| Value | What it blocks |
+|---|---|
+| `PLAYER_INSIDE` | A player attacking the portal's interior (the portal entity itself) |
+| `PLAYER` | A player breaking the frame blocks |
+| `ENTITY` | Any entity-caused destruction, such as a creeper explosion |
+| `DISPENSER` | A dispenser attempting to destroy the portal (currently dispensers cannot break portals, but this future-proofs against it) |
+| `PISTON` | A piston pushing into and destroying the portal |
+| `BLOCK_PHYSICS` | Natural block-state changes, such as a supporting block turning from dirt to grass |
+
+You can combine multiple values by adding additional list entries. Each new source to block gets its own `- <input>` line.
+
+### Example: Block All Sources
+
+```yaml
+Addon:
+  Unbreakable:
+    - 'PLAYER_INSIDE'
+    - 'PLAYER'
+    - 'ENTITY'
+    - 'DISPENSER'
+    - 'PISTON'
+    - 'BLOCK_PHYSICS'
+```
+
+### Example: Block Only Explosions
+
+```yaml
+Addon:
+  Unbreakable:
+    - 'ENTITY'
+```
+
+<Tip>
+  Combine the Unbreakable addon with the [Permissions addon](/addons/premium/permissions) to create staff-only portals. Set `PLAYER` and `ENTITY` as blocked sources so normal players and mobs cannot break the portal, then assign the portal's permission node only to staff — ensuring only authorized users can ever ignite or interact with it.
+</Tip>

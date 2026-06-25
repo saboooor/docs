@@ -1,0 +1,100 @@
+---
+title: "Stylish Portals Addon: Custom Portal Frame Shapes"
+sidebarTitle: "Stylish Portals"
+description: "Define custom block patterns for each side of your portal frame so portals can be built from any combination of blocks, slabs, and stairs."
+---
+
+The Stylish Portals addon lets you replace the standard single-block portal frame with a custom multi-block pattern. You define separate patterns for the top, right side, left side, and bottom of the frame — each using real Minecraft block state data. Once configured, Dimensions will only recognise and ignite a portal that matches your exact pattern.
+
+## Configuration
+
+Add the following block to your portal's `.yml` file. The list contains exactly **four strings** in order: **top**, **right side**, **left side**, **bottom**.
+
+```yaml
+Addon:
+  StylishPortal:
+    FrameStyle:
+      - '<top_pattern>'
+      - '<right_side_pattern>'
+      - '<left_side_pattern>'
+      - '<bottom_pattern>'
+```
+
+<Note>
+  The right and left side patterns start from the block **below** the top corner and end at the block **above** the bottom corner — the corner blocks themselves belong to the top/bottom rows.
+</Note>
+
+### Pattern Syntax
+
+Each string is made up of one or more **patterns** separated by `|`. Dimensions reads them left to right:
+
+- The **first** pattern is what the section must **start** with.
+- The **last** pattern is what the section must **end** with.
+- Any **middle** patterns repeat to fill the space between start and end.
+
+Within a single pattern, multiple blocks that must appear together are separated by `\`.
+
+| Symbol | Meaning |
+|---|---|
+| `\|` | Separates distinct patterns (start, middle, end) |
+| `\` | Separates consecutive blocks within one pattern |
+
+### Using `dimensions:placeholderblock`
+
+If you want a pattern position to accept any block (with optional exclusions), use the placeholder syntax:
+
+```
+dimensions:placeholderblock[all,!air,!cave_air]
+dimensions:placeholderblock[<material>,<material>]
+dimensions:placeholderblock[all,!<material>]
+```
+
+## Getting Block State Data
+
+Use the `/dim blockdata` command in-game to retrieve the full block state string for any block:
+
+<Steps>
+  <Step title="Build your portal frame in-game">
+    Construct the portal shape you want **along the X axis** while facing **north**. This orientation makes the block state data copy correctly.
+  </Step>
+  <Step title="Run /dim blockdata for each block">
+    Stand next to (or look at) a frame block and run `/dim blockdata`. Click the **click me** link in chat to copy the block state to your clipboard.
+  </Step>
+  <Step title="Build the pattern string">
+    Paste the block data into the appropriate line of your `FrameStyle` config. Add `|` to introduce the next pattern segment, or `\` to chain consecutive blocks within the same pattern.
+  </Step>
+  <Step title="Repeat for all four sides">
+    Complete the top, right, left, and bottom lines. If the bottom mirrors the top you can copy the string directly.
+  </Step>
+</Steps>
+
+## Full Example
+
+The following configuration creates a copper portal with decorative stair sides:
+
+```yaml
+Addon:
+  StylishPortal:
+    FrameStyle:
+      - 'minecraft:waxed_cut_copper_slab[type=bottom,waterlogged=false]|minecraft:waxed_cut_copper|minecraft:waxed_cut_copper_slab[type=bottom,waterlogged=false]'
+      - 'minecraft:waxed_cut_copper_stairs[facing=west,half=top,shape=straight,waterlogged=false]|minecraft:waxed_cut_copper_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]\minecraft:waxed_cut_copper_stairs[facing=west,half=top,shape=straight,waterlogged=false]'
+      - 'minecraft:waxed_cut_copper_stairs[facing=east,half=top,shape=straight,waterlogged=false]|minecraft:waxed_cut_copper_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]\minecraft:waxed_cut_copper_stairs[facing=east,half=top,shape=straight,waterlogged=false]'
+      - 'minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]|minecraft:waxed_cut_copper|minecraft:waxed_cut_copper_slab[type=top,waterlogged=false]'
+```
+
+Breaking down the **top** row:
+- Starts with a bottom-type copper slab
+- Middle repeats with a copper block
+- Ends with a bottom-type copper slab
+
+The **right side** (line 2):
+- Starts with a west-facing downward stair
+- Middle alternates: upward stair then downward stair (the `\` joins them as one repeating pair)
+
+<Tip>
+  The pattern must be **complete** for the portal to be recognised. If your portal is three blocks taller than the minimum, the repeating middle section must align perfectly — partial patterns will not match.
+</Tip>
+
+<Warning>
+  Always build and test your portal frame in-game before deploying to production. A mismatched block state (e.g. wrong stair `facing` value) will prevent the portal from igniting.
+</Warning>

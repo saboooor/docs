@@ -1,0 +1,54 @@
+---
+title: "Random Location Addon: Teleport to Random Spots"
+sidebarTitle: "Random Location"
+description: "Scatter players to a random location within a configurable range when they use a Dimensions portal, bypassing any fixed destination."
+---
+
+The Random Location addon replaces the portal's fixed teleport destination with a random spawn point chosen from within a configurable range around where the portal would normally send the player. Every use lands the player somewhere different, making it ideal for wilderness scatter portals, survival starts, or any gameplay mechanic that benefits from unpredictable teleportation.
+
+## Configuration
+
+Add the `RandomLocation` block under the `Addon:` section in your portal's `.yml` file.
+
+```yaml
+Addon:
+  RandomLocation:
+    Range: '<input>'
+    AllowLinkTp: '<input2>'
+```
+
+### Fields
+
+**`Range`** — Any positive number. This is the radius (in blocks) around the portal's normal destination point within which the random location is chosen. A larger value spreads players further apart on each use.
+
+**`AllowLinkTp`** — Set to `'false'` if you want to override linked portals and always use a random location, even when the portal has a linked destination portal configured. When set to `'true'` (or omitted), linked portals take priority and the random teleport only fires when no link is present.
+
+### Example: Wilderness Scatter Portal
+
+```yaml
+Addon:
+  RandomLocation:
+    Range: '5000'
+    AllowLinkTp: 'false'
+```
+
+This sends every player to a random spot within 5,000 blocks of the portal's default destination, ignoring any linked portal.
+
+### Example: Nearby Random Spread
+
+```yaml
+Addon:
+  RandomLocation:
+    Range: '200'
+    AllowLinkTp: 'true'
+```
+
+This scatters players within a 200-block radius, but still honors a linked portal destination if one is configured.
+
+<Tip>
+  If you want to use an external random-teleport plugin command instead of this addon's built-in logic, combine the [Commands on Use addon](/addons/premium/commands-on-use) with `DisableTeleport: true` to suppress Dimensions' own teleport and run your custom command instead.
+</Tip>
+
+<Note>
+  The random location is chosen at the time of use, not at ignition. Each player who steps through gets a freshly calculated random destination, so two players using the portal in quick succession will land in different spots.
+</Note>

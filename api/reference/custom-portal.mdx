@@ -1,0 +1,45 @@
+---
+title: "CustomPortal API Reference for Dimensions Addons"
+sidebarTitle: "CustomPortal"
+description: "Reference for the CustomPortal class — the registered portal type definition loaded from YAML config files in the Dimensions Portals directory."
+---
+
+`CustomPortal` represents a registered portal **type** — the definition that Dimensions reads from each `.yml` file in `./plugins/Dimensions/Portals/`. It holds the portal's frame material, inside block, destination rules, and geometry settings. Every physical portal built by a player in the world is an instance of `CompletePortal` that references one of these registered `CustomPortal` definitions.
+
+## Do Not Instantiate CustomPortal Directly
+
+You should never create a `CustomPortal` yourself. Dimensions loads all portal definitions through [`CustomPortalLoader`](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/customportal/CustomPortalLoader.html) from the `./plugins/Dimensions/Portals/` directory at startup. Creating your own instance would bypass validation and would not be recognised by the rest of the plugin.
+
+<Note>
+  Addons are designed to **add** functionality to Dimensions, not replace its core behavior. Avoid trying to override how portals are loaded or how destinations are resolved unless you have a compelling reason — use the override methods below for targeted customisation instead.
+</Note>
+
+## Override Methods
+
+When you need to change the appearance or shape of an existing portal type, Dimensions provides two focused methods that let you do so without rewriting core logic.
+
+### `CustomPortal#setInsideBlockData(BlockData)`
+
+Call this method to replace the block that fills the inside of the portal frame — the animated portal block players walk through.
+
+```java
+customPortal.setInsideBlockData(
+    Bukkit.createBlockData(Material.NETHER_PORTAL)
+);
+```
+
+Call this inside your addon's `registerPortal(YamlConfiguration config, CustomPortal portal)` override so it runs once per portal type at load time.
+
+### `PortalGeometry#setCustomGeometry(CustomPortal, PortalGeometry)`
+
+Call this to replace the geometry engine Dimensions uses to detect and build portals of a given type. Pass in the target `CustomPortal` and an instance of your custom `PortalGeometry` subclass.
+
+```java
+PortalGeometry.setCustomGeometry(customPortal, new MyPortalGeometry(min, max));
+```
+
+See the [PortalGeometry reference](/api/reference/portal-geometry) for details on implementing a custom geometry class.
+
+## Javadocs
+
+The full method listing for `CustomPortal` is available in the [Javadocs](https://astaspasta.alwaysdata.net/javadocs/me/xxastaspastaxx/dimensions/customportal/CustomPortal.html).

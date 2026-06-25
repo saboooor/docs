@@ -1,0 +1,66 @@
+---
+title: "LightAPI Addon: Portals That Emit Block Light"
+sidebarTitle: "LightAPI"
+description: "Make your portals glow by emitting configurable block light into the surrounding area, powered by the LightAPI plugin for dynamic in-world lighting."
+---
+
+The LightAPI addon makes portals emit block light into the surrounding area, just like a torch or glowstone. The light level is fully configurable, so you can create anything from a subtle ambient glow to a bright beacon that illuminates the surrounding terrain. This addon requires the [LightAPI](https://www.spigotmc.org/resources/lightapi.4510/) plugin (version 5.3.0 or later) to be installed on your server.
+
+## Requirements
+
+<Info>
+  **LightAPI 5.3.0+** must be installed on your server before enabling this addon. Download it from SpigotMC: [https://www.spigotmc.org/resources/lightapi.4510/](https://www.spigotmc.org/resources/lightapi.4510/)
+</Info>
+
+## Configuration
+
+Add the following block to your portal's `.yml` file:
+
+```yaml
+Addon:
+  LightAPI:
+    Level: <0-15>
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `Level` | Integer (0–15) | The light level emitted by the portal. `0` emits no light; `15` is the maximum brightness (equivalent to full sunlight or a beacon beam). |
+
+The recommended starting value is `10`, which produces a warm, visible glow without overwhelming nearby blocks.
+
+### Light Level Reference
+
+| Level | Equivalent Source |
+|---|---|
+| 0 | No light |
+| 7 | Redstone torch |
+| 10 | Recommended portal glow |
+| 14 | Sea lantern |
+| 15 | Beacon / full sunlight |
+
+## Paper Compatibility Mode
+
+After a recent Paper server update, LightAPI requires two additional settings in its own configuration file to function correctly. Open `./plugins/LightAPI/config.yml` and set:
+
+```yaml
+enable-compatibility-mode: true
+force-enable-legacy: true
+```
+
+<Warning>
+  Enabling `enable-compatibility-mode` and `force-enable-legacy` in LightAPI's config **may impact server performance**, particularly on servers with a large number of active portals or frequent light updates. Monitor your server's TPS after enabling these settings and adjust the number of light-emitting portals accordingly.
+</Warning>
+
+## Example
+
+The following configuration makes a portal glow at light level 10:
+
+```yaml
+Addon:
+  LightAPI:
+    Level: 10
+```
+
+<Tip>
+  Combine the LightAPI addon with the Particles addon to create portals that both glow and emit visual effects — an atmospheric combination for dungeon entrances or magical gateway builds.
+</Tip>

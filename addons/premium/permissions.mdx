@@ -1,0 +1,54 @@
+---
+title: "Permissions Addon: Restrict Portal Access by Node"
+sidebarTitle: "Permissions"
+description: "Require players to hold a specific permission node before they can ignite or travel through a Dimensions portal, with a configurable deny message."
+---
+
+The Permissions addon lets you gate each portal behind a custom permission node. Players who lack the node cannot ignite the portal or step through it — they receive a configurable deny message instead. This gives you precise, role-based control over which players can access which portals without any complex workarounds.
+
+## Configuration
+
+Add the `Permission` block under the `Addon:` section in your portal's `.yml` file.
+
+```yaml
+Addon:
+  Permission:
+    Node: '<permission.node>'
+    DenyMessage: '<message to denied players>'
+```
+
+### Fields
+
+**`Node`** — The permission string that players must have to use the portal. Set this to `none` to disable the permission check entirely and allow all players through. For a real permission node, use any dot-separated string that your permissions plugin can assign — for example:
+
+```
+dimensions.useportal.myPortal
+```
+
+**`DenyMessage`** — The text displayed to any player who tries to ignite or use the portal without the required permission. Supports standard Minecraft color codes (e.g. `&c` for red).
+
+### Example: Staff-Only Portal
+
+```yaml
+Addon:
+  Permission:
+    Node: 'dimensions.portal.staffonly'
+    DenyMessage: '&cYou do not have permission to use this portal.'
+```
+
+### Example: Permission Check Disabled
+
+```yaml
+Addon:
+  Permission:
+    Node: 'none'
+    DenyMessage: ''
+```
+
+<Tip>
+  Pair this addon with a permissions plugin like [LuckPerms](https://luckperms.net/) for full role-based portal access. Create a group for each tier of players — VIP, staff, admin — and assign the corresponding `Node` values so each group can only access portals intended for their rank.
+</Tip>
+
+<Note>
+  The permission check applies to both **igniting** the portal (using a flint and steel or lighter) and **walking through** it. A player without the node cannot interact with the portal in either way.
+</Note>

@@ -1,0 +1,127 @@
+---
+title: "BungeeCord Addon: Cross-Server Dimensions Portals"
+sidebarTitle: "BungeeCord"
+description: "Extend Dimensions portals across a BungeeCord or Velocity proxy network so players travel between servers by walking through a portal, just like changing worlds."
+---
+
+The BungeeCord addon extends Dimensions teleportation beyond a single server. Instead of moving players between worlds on the same server, portals configured with this addon send players across your entire BungeeCord or Velocity proxy network. From the player's perspective the experience is identical — walk into a portal, arrive somewhere new.
+
+This is the most involved addon to set up because it requires configuration on **both** the proxy and each individual Spigot/Paper server. Follow the steps for your proxy type below.
+
+<Warning>
+  The portal **filename** (without `.yml`) must be **identical** on every server in the network. If the name differs between servers, the plugin cannot locate the destination portal and the teleport will fail.
+</Warning>
+
+## How Portal Routing Works
+
+The proxy config maps portal names to destination servers. When a player uses a portal:
+
+1. The Spigot/Paper server notifies the proxy via the plugin messaging channel.
+2. The proxy looks up the portal name in its config and determines the destination server.
+3. The player is transferred to that server and placed at the world specified in the per-portal `Bungee` config.
+
+You can define routes in three ways:
+
+| Format | Behaviour |
+|---|---|
+| `portalName->server` | Always sends the player to `server` when they use `portalName` |
+| `serverFrom->portalName->serverTo` | Only applies when the portal is used from `serverFrom`; always sends to `serverTo` |
+| No matching rule | Player falls back to `fallbackServer` |
+
+## Proxy Setup and Per-Server Configuration
+
+<Tabs>
+  <Tab title="BungeeCord / Waterfall">
+    ### Step 1 — Install the Proxy Plugin
+
+    Place `DimensionsBungee.jar` inside the `plugins/` folder of your BungeeCord or Waterfall proxy, then start (or restart) the proxy.
+
+    ### Step 2 — Configure the Proxy
+
+    Open `./plugins/DimensionsBungee/config.yml` and define your portal routes:
+
+    ```yaml
+    fallbackServer: <main_server_name>
+    Portals:
+      - '<portalName>-><server>'
+      # - 'examplePortal->serverOne'
+      # - 'otherPortal->netherServer'
+      # - '<portalName>-><serverName>'
+      # - '<serverFrom>-><portalName>-><serverName>'
+    ```
+
+    Set `fallbackServer` to the server name players are sent to when no matching portal route is found.
+
+    ### Step 3 — Configure Each Spigot/Paper Server
+
+    On **every** Spigot/Paper server that participates in cross-server teleportation, install both **Dimensions** and the **BungeeAddon** `.jar`.
+
+    Then, for each portal on that server, add the Bungee block to the portal's `.yml` file:
+
+    ```yaml
+    Bungee:
+      Enable: true
+      DestWorld: 'world'
+    ```
+
+    `DestWorld` is the world the player arrives in on the destination server. Set it to the world name where the arrival point should be.
+
+    <Note>
+      You only need to set `Enable: true` and `DestWorld` on the portal's config. The proxy config handles which server to route to.
+    </Note>
+  </Tab>
+  <Tab title="Velocity">
+    ### Step 1 — Install the Proxy Plugin
+
+    Place `DimensionsVelocity.jar` inside the `plugins/` folder of your Velocity proxy, then start (or restart) the proxy.
+
+    ### Step 2 — Configure the Proxy
+
+    Open `./plugins/dimensionsvelocity/config.toml` and define your portal routes:
+
+    ```toml
+    config-version = "1.0.0"
+    fallbackServer = "<main_server_name>"
+    Portals = [
+        "<portalName>-><server>",
+    #   "examplePortal->serverOne",
+    #   "otherPortal->netherServer",
+    #   "<portalName>-><serverName>",
+    #   "<serverFrom>-><portalName>-><serverName>",
+    ]
+    ```
+
+    <Warning>
+      Do **not** modify the `config-version` value. It must remain `"1.0.0"` or the plugin will not read the config correctly.
+    </Warning>
+
+    ### Step 3 — Configure Each Spigot/Paper Server
+
+    On **every** Spigot/Paper server that participates in cross-server teleportation, install both **Dimensions** and the **BungeeAddon** `.jar`.
+
+    Then, for each portal on that server, add the Bungee block to the portal's `.yml` file:
+
+    ```yaml
+    Bungee:
+      Enable: true
+      DestWorld: 'world'
+    ```
+
+    `DestWorld` is the world the player arrives in on the destination server.
+
+    <Note>
+      The per-server portal configuration is identical for both BungeeCord and Velocity setups.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Checklist
+
+Before testing cross-server teleportation, verify the following:
+
+- [ ] Proxy plugin (`DimensionsBungee.jar` or `DimensionsVelocity.jar`) is installed and the proxy has been restarted.
+- [ ] `fallbackServer` points to a valid server name in your network.
+- [ ] Portal names in the proxy `Portals` list match the `.yml` filenames exactly (case-sensitive).
+- [ ] Both **Dimensions** and **BungeeAddon** are installed on every participating Spigot/Paper server.
+- [ ] Every portal that should participate has `Bungee.Enable: true` in its config.
+- [ ] `DestWorld` is set to a world that exists on the destination server.

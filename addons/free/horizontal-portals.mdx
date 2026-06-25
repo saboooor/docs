@@ -1,0 +1,38 @@
+---
+title: "Horizontal Portals Addon for Dimensions"
+sidebarTitle: "Horizontal Portals"
+description: "Build Dimensions portals flat on the ground or ceiling. Supports vertical-only, horizontal-only, or mixed orientation per portal type."
+---
+
+The Horizontal Portals addon removes the restriction that portals must stand upright. With this addon installed, you can configure individual portal types to be built flat on the ground, flat against the ceiling, or in either orientation — opening up a whole new range of build styles and adventure map mechanics.
+
+<Warning>
+  Horizontal portals do **not** support custom blocks as the portal frame.
+  The custom inside block (portal fill) and the lighter (ignition item) both
+  work correctly in horizontal mode, but the frame material must be a standard
+  Minecraft block.
+</Warning>
+
+## Configuration
+
+Add the `HorizontalPortal` key under the `Addon` section of the portal's `.yml` configuration file:
+
+```yaml
+Addon:
+  HorizontalPortal: '<input>'
+```
+
+### Values
+
+| Value | Behaviour |
+|---|---|
+| `false` | Default behaviour — the portal can only be built vertically |
+| `true` | The portal can only be built horizontally |
+| `both` | The portal can be built vertically or horizontally, and a vertical instance can link to a horizontal instance of the same type |
+
+<Tip>
+  Use `both` when you want players to be able to enter a portal from either
+  orientation and still arrive at the correct destination. Portals built in
+  different orientations but set to `both` will recognise and link with each
+  other normally.
+</Tip>

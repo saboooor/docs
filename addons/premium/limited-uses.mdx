@@ -1,0 +1,64 @@
+---
+title: "Limited Uses Addon: Auto-Destruct Portals"
+sidebarTitle: "Limited Uses"
+description: "Configure a Dimensions portal to automatically close or destroy itself after a set number of total uses across all players."
+---
+
+The Limited Uses addon sets a hard cap on how many times a portal can be used before it automatically removes itself. The use counter is shared across all players — once the total threshold is reached, the portal closes or destroys itself based on the action you configure. This is ideal for limited-time event portals, rare one-way passages, or challenge runs where the portal disappears after the first team through.
+
+## Configuration
+
+Add the `LimitedUses` block under the `Addon:` section in your portal's `.yml` file.
+
+```yaml
+Addon:
+  LimitedUses:
+    MaxUses: <integer above 0>
+    Action: '<Close or Destroy>'
+```
+
+### Fields
+
+**`MaxUses`** — Any integer greater than zero. This is the total number of uses across all players before the portal triggers its action. For example, setting `MaxUses: 10` means the portal self-destructs after the tenth player passes through, regardless of who used it.
+
+**`Action`** — Controls what happens when the portal reaches its use limit. Two base values are available:
+
+- `Close` — Breaks only the portal interior (the same effect as attacking the inside of the portal). The frame blocks remain intact.
+- `Destroy` — Removes both the portal interior and all frame blocks entirely.
+
+### Adding an Explosion Chance
+
+Append `{explode%<0-100>}` to either action value to give the portal a percentage chance of exploding when it triggers. The integer after `%` is the explosion probability.
+
+```yaml
+Addon:
+  LimitedUses:
+    MaxUses: 5
+    Action: 'Destroy{explode%50}'
+```
+
+In this example, when the fifth player uses the portal it is destroyed and has a 50 % chance of also exploding. Setting the value to `100` guarantees an explosion; `0` means it never explodes.
+
+### Examples
+
+**Close after 1 use (one-way portal):**
+
+```yaml
+Addon:
+  LimitedUses:
+    MaxUses: 1
+    Action: 'Close'
+```
+
+**Destroy the frame with guaranteed explosion after 20 uses:**
+
+```yaml
+Addon:
+  LimitedUses:
+    MaxUses: 20
+    Action: 'Destroy{explode%100}'
+```
+
+<Warning>
+  The use counter is not reset when the portal is re-ignited. Once the limit is reached and the action fires, the portal is gone. Design your portal configuration accordingly if you want a recurring portal.
+</Warning>

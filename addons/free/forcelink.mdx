@@ -1,0 +1,51 @@
+---
+title: "ForceLink Addon: Manually Link Two Portals"
+sidebarTitle: "ForceLink"
+description: "Permanently link any two Dimensions portals together so they always teleport to each other, ignoring the automatic search algorithm."
+---
+
+The ForceLink addon gives you direct control over portal destinations. Normally, Dimensions links portals using an automatic search algorithm that finds the nearest matching portal. ForceLink lets you override that behaviour and permanently pair two specific portals together — no matter how many other portals of the same type exist nearby.
+
+<Note>
+  ForceLink requires the ForceLink addon jar to be installed and loaded inside
+  `./plugins/Dimensions/Addons/`. The commands below will not be available
+  unless the addon is active.
+</Note>
+
+## Linking Two Portals
+
+<Steps>
+  <Step title="Select the first portal">
+    Stand in front of the first portal so it is directly in your crosshair,
+    then run:
+
+    ```
+    /dim forceLink select
+    ```
+
+    Dimensions records this portal as the first half of the pair.
+  </Step>
+  <Step title="Move to the second portal">
+    Walk to the second portal you want to link to the first one. Face it so it
+    is in your crosshair, then run:
+
+    ```
+    /dim forceLink set
+    ```
+
+    Dimensions permanently pairs the two portals.
+  </Step>
+  <Step title="Verify the link">
+    Step through either portal to confirm it teleports you to the other. The
+    link persists across server restarts and ignores any new portals that are
+    built nearby.
+  </Step>
+</Steps>
+
+<Tip>
+  ForceLink is especially useful when you have multiple portals of the same
+  type close together — for example, in a hub world with several nether-style
+  portals side by side. Use it to guarantee each portal always delivers players
+  to the exact destination you intend, rather than letting the search algorithm
+  pick one for you.
+</Tip>

@@ -1,0 +1,65 @@
+---
+title: "Charge on Use Addon: Economy-Gated Portals"
+sidebarTitle: "Charge on Use"
+description: "Withdraw money from a player's balance each time they use a Dimensions portal, with support for return-trip exemptions and one-time payment options."
+---
+
+The Charge on Use addon integrates your portals directly with your server economy. Each time a player steps through a portal, Dimensions withdraws a configured amount from their balance. If they cannot afford the fare, they are denied entry and shown a custom message. You can also configure exemptions for return trips and limit charges to a single payment per portal instance.
+
+<Info>
+  This addon requires [Vault](https://www.spigotmc.org/resources/vault.34315/) and a Vault-compatible economy plugin (such as EssentialsX Economy, CMI, or AuraEconomy) to be installed and running on your server. Without Vault, the addon will not function.
+</Info>
+
+## Configuration
+
+Add the `ChargeOnUse` block under the `Addon:` section in your portal's `.yml` file.
+
+```yaml
+Addon:
+  ChargeOnUse:
+    Amount: <integer above 0>
+    ChargeOnReturn: <true/false>
+    OneTimePayment: <true/false>
+    DenyMessage: '<message>'
+    ChargeMessage: '<message>'
+```
+
+### Fields
+
+**`Amount`** — Any integer greater than zero. This is the cost in your server's currency units deducted from the player's balance each time they use the portal.
+
+**`ChargeOnReturn`** — `true` or `false`. When set to `false`, the plugin skips the charge if the player is traveling *from* the portal's destination world back to the portal's origin world. Set to `true` to charge in both directions.
+
+**`OneTimePayment`** — `true` or `false`. When set to `true`, each built portal instance charges a given player only once — subsequent uses of that same portal are free for that player. When `false`, the player is charged on every use.
+
+**`DenyMessage`** — The message shown to a player who does not have enough currency to use the portal. Supports standard Minecraft color codes.
+
+**`ChargeMessage`** — The message shown to a player after they are successfully charged. Use this to confirm the transaction. Supports standard Minecraft color codes.
+
+### Example: Basic Toll Portal
+
+```yaml
+Addon:
+  ChargeOnUse:
+    Amount: 100
+    ChargeOnReturn: true
+    OneTimePayment: false
+    DenyMessage: '&cYou need at least $100 to use this portal!'
+    ChargeMessage: '&a$100 has been deducted from your balance.'
+```
+
+### Example: One-Way Free Return
+
+```yaml
+Addon:
+  ChargeOnUse:
+    Amount: 500
+    ChargeOnReturn: false
+    OneTimePayment: false
+    DenyMessage: '&cYou cannot afford the portal fee of $500.'
+    ChargeMessage: '&ePortal fare of $500 collected. Safe travels!'
+```
+
+<Warning>
+  Ensure your economy plugin is fully loaded before Dimensions initializes. If Vault cannot find a registered economy provider on startup, the Charge on Use addon will log a warning and fall back to allowing free passage.
+</Warning>

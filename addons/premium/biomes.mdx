@@ -1,0 +1,80 @@
+---
+title: "Biomes Addon: Restrict Portals by Biome"
+sidebarTitle: "Biomes"
+description: "Allow or deny Dimensions portal usage based on the biome the player is standing in, with a configurable deny message for blocked biomes."
+---
+
+The Biomes addon controls whether a player can use a portal based on the biome they are currently standing in. You can whitelist specific biomes so the portal only works in those locations, or use an exclusion list to allow everything except certain biomes. This is great for immersive portals that should only be accessible in thematic locations — a nether portal that only works in a desert, or a magical portal that is blocked inside a mushroom island.
+
+## Configuration
+
+Add the `Biomes` block under the `Addon:` section in your portal's `.yml` file.
+
+```yaml
+Addon:
+  Biomes:
+    Allowed: '<biome list>'
+    DenyMessage: '<message>'
+```
+
+### Fields
+
+**`Allowed`** — A string that defines which biomes permit portal use. There are three formats:
+
+- **Single biome** — Allow only one specific biome:
+  ```
+  Allowed: 'plains'
+  ```
+- **Multiple biomes** — Allow a comma-separated list of biomes:
+  ```
+  Allowed: 'plains, desert, savanna'
+  ```
+- **All biomes with exclusions** — Start with `all` and then list biomes to block, each prefixed with `!`:
+  ```
+  Allowed: 'all, !plains, !mushroom_fields'
+  ```
+- **All biomes** — Use `all` on its own to disable the biome restriction entirely:
+  ```
+  Allowed: 'all'
+  ```
+
+Use the standard Minecraft biome ID strings (e.g. `plains`, `desert`, `nether_wastes`, `the_end`). Biome IDs are case-insensitive.
+
+**`DenyMessage`** — The message shown to a player who tries to use the portal from a non-allowed biome. Supports standard Minecraft color codes.
+
+### Examples
+
+**Portal that only works in plains:**
+
+```yaml
+Addon:
+  Biomes:
+    Allowed: 'plains'
+    DenyMessage: '&cThis portal only activates on open plains.'
+```
+
+**Portal that works everywhere except mushroom islands:**
+
+```yaml
+Addon:
+  Biomes:
+    Allowed: 'all, !mushroom_fields'
+    DenyMessage: '&eThe portal feels dormant in this strange land.'
+```
+
+**Portal open in multiple specific biomes:**
+
+```yaml
+Addon:
+  Biomes:
+    Allowed: 'desert, badlands, eroded_badlands'
+    DenyMessage: '&6This portal only responds to the heat of arid lands.'
+```
+
+<Note>
+  Biome restriction applies when a player **attempts to use** the portal. Players can still physically enter the portal frame — they simply cannot travel through it from a disallowed biome and will receive the `DenyMessage` instead.
+</Note>
+
+<Tip>
+  Combine the Biomes addon with the [Timed Portals addon](/addons/premium/timed-portals) to create seasonal or event portals that are both location-restricted and time-limited — available only in certain biomes and only for a short window after ignition.
+</Tip>

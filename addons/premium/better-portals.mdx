@@ -1,0 +1,45 @@
+---
+title: "Better Portals Addon: See-Through Portal Windows"
+sidebarTitle: "Better Portals"
+description: "Integrate with the BetterPortals plugin to render a live view of the portal destination through the portal frame, giving players a window into the other world."
+---
+
+The Better Portals addon integrates Dimensions with the [BetterPortals](https://www.spigotmc.org/resources/betterportals.75409/) plugin to render a real-time view of the destination world directly inside the portal frame. When a player approaches a portal, they see a live window showing what is on the other side — before they step through.
+
+<Info>
+  This addon requires the **BetterPortals** plugin to be installed on your server. You can find it on SpigotMC: [https://www.spigotmc.org/resources/betterportals.75409/](https://www.spigotmc.org/resources/betterportals.75409/)
+
+  Once BetterPortals is installed alongside the Better Portals addon, the integration is **enabled automatically** for all Dimensions portals — no extra configuration is needed to turn it on.
+</Info>
+
+## Disabling for a Specific Portal
+
+If you want to turn off the BetterPortals rendering for one particular portal while leaving it active on others, add the following to that portal's `.yml` file:
+
+```yaml
+Addon:
+  EnableBetterPortals: false
+```
+
+Setting `EnableBetterPortals: false` tells Dimensions to skip the BetterPortals integration for that portal only. All other portals on the server continue to use the live view.
+
+## Setup Summary
+
+<Steps>
+  <Step title="Install BetterPortals on your server">
+    Download [BetterPortals](https://www.spigotmc.org/resources/betterportals.75409/) and place the `.jar` in your server's `plugins/` folder.
+  </Step>
+  <Step title="Install the Better Portals addon for Dimensions">
+    Place the Better Portals addon `.jar` in your `plugins/` folder alongside Dimensions.
+  </Step>
+  <Step title="Restart your server">
+    Start (or restart) the server. The integration activates automatically — no additional config required.
+  </Step>
+  <Step title="Disable selectively if needed">
+    For any portal where you do not want the live view, add `EnableBetterPortals: false` under the `Addon:` key in that portal's `.yml` file.
+  </Step>
+</Steps>
+
+<Tip>
+  The see-through effect is most impactful on portals that lead to visually distinct worlds — for example, a desert portal that reveals a snowy tundra through the frame. Consider the destination environment when deciding which portals to enable this on.
+</Tip>
